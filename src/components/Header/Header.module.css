@@ -42,11 +42,21 @@
 }
 
 @media (max-width: 700px) {
+    .inner {
+        gap: 12px;
+    }
+
     .nav {
         display: none;
     }
 
+    /* поле пошуку займає місце, що лишилось */
+    .search {
+        flex: 1;
+        min-width: 0;
+    }
+
     .search input {
-        width: 160px;
+        width: 100%;
     }
 }

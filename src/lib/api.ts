@@ -3,10 +3,12 @@ const API_URL = process.env.API_URL ?? 'http://localhost:5000';
 
 export class ApiError extends Error {
   status: number;
+  errors?: string[];
 
-  constructor(status: number, message: string) {
+  constructor(status: number, message: string, errors?: string[]) {
     super(message);
     this.status = status;
+    this.errors = errors;
   }
 }
 

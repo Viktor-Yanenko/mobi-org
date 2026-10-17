@@ -1,0 +1,21 @@
+.placeholder {
+    display: inline-block;
+    width: 80px;
+}
+
+.user,
+.login {
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.user {
+    background: var(--surface);
+}
+
+.login {
+    background: var(--accent);
+    color: #fff;
+}

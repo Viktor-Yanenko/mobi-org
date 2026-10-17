@@ -75,7 +75,15 @@ export default async function ProductPage({
             </p>
           )}
 
-          <VariantPicker variants={product.variants} />
+          <VariantPicker
+            product={{
+              _id: product._id,
+              name: product.name,
+              slug: product.slug,
+              image: product.images[0] ?? null,
+            }}
+            variants={product.variants}
+          />
 
           {product.description && (
             <p className={styles.description}>{product.description}</p>

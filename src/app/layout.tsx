@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import AuthProvider from '@/components/AuthProvider/AuthProvider';
+import CartProvider from '@/components/CartProvider/CartProvider';
 import Header from '@/components/Header/Header';
 import './globals.css';
 
@@ -15,8 +17,13 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     <html lang="uk" className={inter.className}>
       <body>
-        <Header />
-        <main>{children}</main>
+        <AuthProvider>
+          {/* кошику потрібен користувач, тому він усередині AuthProvider */}
+          <CartProvider>
+            <Header />
+            <main>{children}</main>
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );

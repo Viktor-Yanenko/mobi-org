@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import styles from './Header.module.css';
+import UserMenu from '../UserMenu/UserMenu';
+import CartLink from '../CartLink/CartLink';
 
 export default function Header() {
   return (
@@ -23,6 +25,9 @@ export default function Header() {
             aria-label="Пошук товарів"
           />
         </form>
+
+        <CartLink />
+        <UserMenu />
       </div>
     </header>
   );
