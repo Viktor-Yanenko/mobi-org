@@ -1,0 +1,85 @@
+.breadcrumbs {
+    margin: 20px 0;
+    font-size: 14px;
+    color: var(--muted);
+}
+
+.breadcrumbs a:hover {
+    color: var(--accent);
+}
+
+.layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+}
+
+.gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.thumbs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+}
+
+.brand {
+    color: var(--muted);
+}
+
+.name {
+    font-size: 32px;
+    line-height: 1.2;
+}
+
+.rating {
+    margin-top: 8px;
+    color: var(--accent-warm);
+}
+
+.description {
+    margin-top: 16px;
+    line-height: 1.6;
+}
+
+.subtitle {
+    margin: 28px 0 12px;
+    font-size: 20px;
+}
+
+.specs {
+    border-top: 1px solid var(--border);
+}
+
+.specRow {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.specRow dt {
+    color: var(--muted);
+}
+
+.accessories {
+    margin-top: 40px;
+}
+
+.accessory {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 14px;
+}
+
+@media (max-width: 800px) {
+    .layout {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}

@@ -1,0 +1,20 @@
+.frame {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: 12px;
+    background: var(--surface);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image {
+    object-fit: contain;
+    padding: 12px;
+}
+
+.placeholder {
+    color: var(--muted);
+    font-size: 14px;
+}

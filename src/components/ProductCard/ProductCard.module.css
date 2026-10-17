@@ -1,0 +1,54 @@
+.card {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--background);
+    transition: box-shadow 0.2s;
+}
+
+.card:hover {
+    box-shadow: 0 6px 20px rgb(0 0 0 / 0.08);
+}
+
+.brand {
+    margin-top: 6px;
+    font-size: 13px;
+    color: var(--muted);
+}
+
+.name {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.rating {
+    font-size: 13px;
+    color: var(--accent-warm);
+}
+
+.prices {
+    margin-top: auto;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.price {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.oldPrice {
+    font-size: 14px;
+    color: var(--muted);
+    text-decoration: line-through;
+}
+
+.outOfStock {
+    font-size: 13px;
+    color: var(--danger);
+}

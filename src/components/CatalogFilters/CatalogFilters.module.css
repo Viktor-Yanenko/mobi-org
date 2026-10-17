@@ -1,0 +1,53 @@
+.filters {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    align-self: start;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.field select,
+.field input {
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font: inherit;
+    font-weight: 400;
+    min-width: 0;
+}
+
+.priceRow {
+    display: flex;
+    gap: 8px;
+}
+
+.priceRow input {
+    width: 50%;
+}
+
+.submit {
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background: var(--accent);
+    color: #fff;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.reset {
+    text-align: center;
+    font-size: 14px;
+    color: var(--muted);
+}
