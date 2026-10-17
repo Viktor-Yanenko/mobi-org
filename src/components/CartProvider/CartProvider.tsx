@@ -27,6 +27,8 @@ interface CartContextValue {
   updateQuantity: (sku: string, quantity: number) => Promise<void>;
   removeItem: (sku: string) => Promise<void>;
   clear: () => Promise<void>;
+  // перечитати кошик з бекенду (після оформлення замовлення він порожній)
+  reload: () => Promise<void>;
 }
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -127,9 +129,21 @@ export default function CartProvider({
     saveGuest([]);
   };
 
+  const reload = async () => {
+    setCart(userId ? await loadServerCart() : toCart(readGuestCart()));
+  };
+
   return (
     <CartContext
-      value={{ cart, isLoading, addItem, updateQuantity, removeItem, clear }}
+      value={{
+        cart,
+        isLoading,
+        addItem,
+        updateQuantity,
+        removeItem,
+        clear,
+        reload,
+      }}
     >
       {children}
     </CartContext>

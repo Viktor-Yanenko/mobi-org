@@ -1,0 +1,130 @@
+.message {
+    padding: 48px 0;
+    text-align: center;
+    color: var(--muted);
+}
+
+.error {
+    padding: 8px 0;
+    color: var(--danger);
+}
+
+.success {
+    margin-top: 24px;
+    padding: 16px 20px;
+    border-radius: 12px;
+    background: #dcfce7;
+    color: #15803d;
+    font-weight: 600;
+}
+
+.heading {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.date {
+    margin: 4px 0 24px;
+    color: var(--muted);
+}
+
+.layout {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 24px;
+    align-items: start;
+}
+
+.items {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+}
+
+.item {
+    display: grid;
+    grid-template-columns: 1fr auto 110px;
+    gap: 16px;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+}
+
+.item:last-child {
+    border-bottom: none;
+}
+
+.item strong {
+    text-align: right;
+}
+
+.muted {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+}
+
+.info h2 {
+    margin-bottom: 4px;
+    font-size: 14px;
+    color: var(--muted);
+}
+
+.totals {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+}
+
+.totals p {
+    display: flex;
+    justify-content: space-between;
+}
+
+.total {
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.cancel {
+    padding: 10px;
+    border: 1px solid var(--danger);
+    border-radius: 10px;
+    background: var(--background);
+    color: var(--danger);
+    font: inherit;
+    cursor: pointer;
+}
+
+.back {
+    display: inline-block;
+    margin-top: 24px;
+    color: var(--accent);
+}
+
+@media (max-width: 900px) {
+    .layout {
+        grid-template-columns: 1fr;
+    }
+
+    .item {
+        grid-template-columns: 1fr auto;
+    }
+
+    .item>span:nth-child(2) {
+        grid-row: 2;
+    }
+}

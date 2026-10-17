@@ -4,7 +4,8 @@
 }
 
 .user,
-.login {
+.login,
+.admin {
     padding: 8px 14px;
     border-radius: 8px;
     font-weight: 600;
@@ -18,4 +19,15 @@
 .login {
     background: var(--accent);
     color: #fff;
+}
+
+.admin {
+    border: 1px solid var(--accent);
+    color: var(--accent);
+}
+
+@media (max-width: 700px) {
+    .admin {
+        display: none;
+    }
 }

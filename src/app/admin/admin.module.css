@@ -1,0 +1,178 @@
+.message {
+    padding: 48px 16px;
+    text-align: center;
+    color: var(--muted);
+}
+
+.shell {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 32px;
+    padding-top: 24px;
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-self: start;
+    position: sticky;
+    top: 88px;
+}
+
+.sidebarTitle {
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.link,
+.activeLink {
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.link:hover {
+    background: var(--surface);
+}
+
+.activeLink {
+    background: var(--accent);
+    color: #fff;
+}
+
+.content {
+    min-width: 0;
+}
+
+/* спільне для сторінок адмінки */
+
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.toolbar h1 {
+    margin-right: auto;
+    font-size: 26px;
+}
+
+.input {
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font: inherit;
+}
+
+.button,
+.primary,
+.danger {
+    padding: 8px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--background);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.primary {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: #fff;
+}
+
+.danger {
+    border-color: var(--danger);
+    color: var(--danger);
+}
+
+.button:disabled,
+.primary:disabled,
+.danger:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.tableWrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.table th,
+.table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    white-space: nowrap;
+}
+
+.table th {
+    background: var(--surface);
+    font-weight: 600;
+}
+
+.table tr:last-child td {
+    border-bottom: none;
+}
+
+.table a {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+}
+
+.muted {
+    color: var(--muted);
+}
+
+.error {
+    margin: 12px 0;
+    color: var(--danger);
+}
+
+.pager {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+@media (max-width: 800px) {
+    .shell {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .sidebar {
+        position: static;
+        flex-direction: row;
+    }
+
+    .sidebarTitle {
+        display: none;
+    }
+}
+
+.subtitle {
+    margin: 28px 0 12px;
+    font-size: 20px;
+}

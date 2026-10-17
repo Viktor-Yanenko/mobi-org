@@ -39,6 +39,8 @@ export interface AccessoryShort {
 
 export interface Product {
   _id: string;
+  // для аксесуара: id сумісних телефонів
+  compatibleWith?: string[];
   type: ProductType;
   name: string;
   slug: string;
@@ -113,4 +115,56 @@ export interface Cart {
   items: CartItem[];
   totalQuantity: number;
   totalPrice: number;
+}
+
+export type DeliveryMethod = 'nova-poshta' | 'courier' | 'pickup';
+export type PaymentMethod = 'card' | 'cash-on-delivery';
+export type OrderStatus =
+  | 'new'
+  | 'confirmed'
+  | 'shipped'
+  | 'delivered'
+  | 'cancelled';
+
+export interface OrderItem {
+  product: string;
+  sku: string;
+  name: string;
+  image?: string | null;
+  price: number;
+  quantity: number;
+}
+
+export interface Order {
+  _id: string;
+  orderNumber: number;
+  items: OrderItem[];
+  contact: { name: string; phone: string; email: string };
+  delivery: {
+    method: DeliveryMethod;
+    city?: string;
+    address?: string;
+    cost: number;
+  };
+  payment: {
+    method: PaymentMethod;
+    status: 'pending' | 'paid' | 'refunded';
+  };
+  totalPrice: number;
+  status: OrderStatus;
+  comment?: string;
+  createdAt: string;
+}
+
+// тіло POST /orders
+export interface CreateOrderData {
+  contact: Order['contact'];
+  delivery: { method: DeliveryMethod; city?: string; address?: string };
+  payment: { method: PaymentMethod };
+  comment?: string;
+}
+
+export interface AdminOrder extends Order {
+  // у списку для адміна бекенд підставляє ім'я та email покупця
+  user: { _id: string; name: string; email: string } | null;
 }

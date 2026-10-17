@@ -1,0 +1,29 @@
+.badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.new {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.confirmed,
+.shipped {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+.delivered {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.cancelled {
+    background: var(--surface);
+    color: var(--muted);
+}

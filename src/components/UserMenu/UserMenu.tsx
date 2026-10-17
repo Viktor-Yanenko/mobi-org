@@ -10,13 +10,24 @@ export default function UserMenu() {
   // поки не знаємо, чи користувач увійшов, нічого не показуємо, щоб не блимало
   if (isLoading) return <span className={styles.placeholder} />;
 
-  return user ? (
-    <Link href="/profile" className={styles.user}>
-      {user.name}
-    </Link>
-  ) : (
-    <Link href="/login" className={styles.login}>
-      Увійти
-    </Link>
+  if (!user) {
+    return (
+      <Link href="/login" className={styles.login}>
+        Увійти
+      </Link>
+    );
+  }
+
+  return (
+    <>
+      {user.role === 'admin' && (
+        <Link href="/admin" className={styles.admin}>
+          Адмінка
+        </Link>
+      )}
+      <Link href="/profile" className={styles.user}>
+        {user.name}
+      </Link>
+    </>
   );
 }

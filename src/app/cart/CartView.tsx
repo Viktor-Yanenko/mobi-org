@@ -144,10 +144,15 @@ export default function CartView() {
           </p>
         )}
 
-        {/* сторінку оформлення зробимо в наступному кроці */}
-        <button type="button" className={styles.checkout} disabled>
-          Оформити замовлення
-        </button>
+        {hasUnavailable ? (
+          <button type="button" className={styles.checkout} disabled>
+            Оформити замовлення
+          </button>
+        ) : (
+          <Link href="/checkout" className={styles.checkout}>
+            Оформити замовлення
+          </Link>
+        )}
 
         <button
           type="button"

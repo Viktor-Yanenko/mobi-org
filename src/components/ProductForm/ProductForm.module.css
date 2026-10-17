@@ -1,0 +1,140 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 20px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+}
+
+.section legend {
+    padding: 0 6px;
+    font-weight: 700;
+}
+
+.typeSwitch {
+    display: flex;
+    gap: 20px;
+}
+
+.typeSwitch label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+}
+
+.field,
+.label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.field input,
+.field select,
+.field textarea,
+.variant input {
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font: inherit;
+    font-weight: 400;
+    min-width: 0;
+}
+
+.variants {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-x: auto;
+}
+
+.variantHead,
+.variant {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 0.8fr 0.9fr 0.9fr 0.7fr 32px;
+    gap: 8px;
+    min-width: 640px;
+}
+
+.variantHead {
+    font-size: 13px;
+    color: var(--muted);
+}
+
+.removeVariant {
+    border: none;
+    background: none;
+    color: var(--muted);
+    cursor: pointer;
+}
+
+.removeVariant:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.addVariant {
+    align-self: flex-start;
+    padding: 8px 12px;
+    border: 1px dashed var(--accent);
+    border-radius: 8px;
+    background: none;
+    color: var(--accent);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.checkboxes {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 8px;
+    font-size: 14px;
+}
+
+.checkboxes label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.error {
+    color: var(--danger);
+}
+
+.success {
+    color: var(--success);
+    font-weight: 600;
+}
+
+.submit {
+    align-self: flex-start;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    background: var(--accent);
+    color: #fff;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.submit:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}

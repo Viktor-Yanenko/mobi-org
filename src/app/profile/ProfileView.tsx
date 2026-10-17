@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/AuthProvider/AuthProvider';
 import styles from './page.module.css';
+import Link from 'next/link';
 
 export default function ProfileView() {
   const { user, isLoading, logout } = useAuth();
@@ -43,6 +44,16 @@ export default function ProfileView() {
           <dd>{user.phone ?? 'не вказано'}</dd>
         </div>
       </dl>
+
+      <Link href="/orders" className={styles.orders}>
+        Мої замовлення →
+      </Link>
+
+      {user.role === 'admin' && (
+        <Link href="/admin" className={styles.orders}>
+          Адмінка →
+        </Link>
+      )}
 
       <button type="button" onClick={handleLogout} className={styles.logout}>
         Вийти

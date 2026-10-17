@@ -13,5 +13,6 @@ export function proxy(request: NextRequest) {
 
 // на яких сторінках це перевіряти
 export const config = {
-  matcher: ['/profile/:path*'],
+  matcher: ['/profile/:path*', '/checkout', '/orders/:path*', '/admin/:path*'],
 };
+
