@@ -1,0 +1,147 @@
+.section {
+    max-width: 560px;
+    margin: 0 auto 24px;
+    padding: 24px 32px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+}
+
+.title {
+    margin-bottom: 16px;
+    font-size: 20px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.field input {
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font: inherit;
+    font-weight: 400;
+}
+
+.hint {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.error {
+    color: var(--danger);
+}
+
+.success {
+    color: var(--success);
+    font-weight: 600;
+}
+
+.submit {
+    align-self: flex-start;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    background: var(--accent);
+    color: #fff;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.submit:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+/* адреси */
+
+.addresses {
+    list-style: none;
+    margin-bottom: 16px;
+}
+
+.address {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.default {
+    margin-left: 8px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--accent);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.addressActions,
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.linkButton,
+.deleteButton {
+    padding: 0;
+    border: none;
+    background: none;
+    color: var(--accent);
+    font: inherit;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.deleteButton {
+    color: var(--danger);
+}
+
+.addButton {
+    padding: 10px 16px;
+    border: 1px dashed var(--accent);
+    border-radius: 10px;
+    background: none;
+    color: var(--accent);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.kind,
+.checkbox {
+    display: flex;
+    gap: 20px;
+    font-size: 14px;
+}
+
+.kind label,
+.checkbox {
+    align-items: center;
+    gap: 6px;
+}
+
+.kind label {
+    display: flex;
+}
+
+@media (max-width: 600px) {
+    .section {
+        padding: 20px;
+    }
+}

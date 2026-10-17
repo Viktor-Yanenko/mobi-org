@@ -21,6 +21,11 @@ const MESSAGES: Record<string, string> = {
     'Ви вже залишили відгук на цей товар',
   'Review not found': 'Відгук не знайдено',
   'Product not found': 'Товар не знайдено',
+    'Current password is wrong': 'Поточний пароль неправильний',
+  'New password must differ from current':
+    'Новий пароль має відрізнятися від поточного',
+  'Address not found': 'Адресу не знайдено',
+  'Maximum 5 addresses allowed': 'Можна зберегти не більше 5 адрес',
 };
 
 export const getErrorMessage = (error: unknown) => {
@@ -29,8 +34,10 @@ export const getErrorMessage = (error: unknown) => {
     if (error.message === 'Some items are out of stock') {
       return `Не вистачає на складі: ${error.errors?.join(', ')}`;
     }
-    if (error.errors?.length) return error.errors.join('. ');
-
+    
+    if (error.errors?.length) {
+        return error.errors.map((text) => MESSAGES[text] ?? text).join('. ');
+    }
     // 409 від кошика: "Only 3 items in stock"
     const stock = error.message.match(/^Only (\d+) items in stock$/);
     if (stock) return `На складі лише ${stock[1]} шт.`;

@@ -1,10 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/AuthProvider/AuthProvider';
+import Addresses from './Addresses';
+import PasswordForm from './PasswordForm';
+import ProfileForm from './ProfileForm';
 import styles from './page.module.css';
-import Link from 'next/link';
 
 export default function ProfileView() {
   const { user, isLoading, logout } = useAuth();
@@ -28,40 +31,47 @@ export default function ProfileView() {
   };
 
   return (
-    <div className={styles.card}>
-      <h1 className={styles.name}>
-        {user.name}
-        {user.role === 'admin' && <span className={styles.badge}>адмін</span>}
-      </h1>
+    <>
+      <div className={styles.card}>
+        <h1 className={styles.name}>
+          {user.name}
+          {user.role === 'admin' && <span className={styles.badge}>адмін</span>}
+        </h1>
 
-      <dl className={styles.info}>
-        <div>
-          <dt>Email</dt>
-          <dd>{user.email}</dd>
-        </div>
-        <div>
-          <dt>Телефон</dt>
-          <dd>{user.phone ?? 'не вказано'}</dd>
-        </div>
-      </dl>
+        <dl className={styles.info}>
+          <div>
+            <dt>Email</dt>
+            <dd>{user.email}</dd>
+          </div>
+          <div>
+            <dt>Телефон</dt>
+            {/* після очищення телефону бекенд зберігає порожній рядок */}
+            <dd>{user.phone || 'не вказано'}</dd>
+          </div>
+        </dl>
 
-      <Link href="/orders" className={styles.orders}>
-        Мої замовлення →
-      </Link>
-
-      <Link href="/favorites" className={styles.orders}>
-        Обране ({user.favorites.length}) →
-      </Link>
-
-      {user.role === 'admin' && (
-        <Link href="/admin" className={styles.orders}>
-          Адмінка →
+        <Link href="/orders" className={styles.orders}>
+          Мої замовлення →
         </Link>
-      )}
 
-      <button type="button" onClick={handleLogout} className={styles.logout}>
-        Вийти
-      </button>
-    </div>
+        <Link href="/favorites" className={styles.orders}>
+          Обране ({user.favorites.length}) →
+        </Link>
+
+        {user.role === 'admin' && (
+          <Link href="/admin" className={styles.orders}>
+            Адмінка →
+          </Link>
+        )}
+
+        <button type="button" onClick={handleLogout} className={styles.logout}>
+          Вийти
+        </button>
+      </div>
+
+      <ProfileForm />
+      <Addresses />
+      <PasswordForm />
+    </>
   );
 }
