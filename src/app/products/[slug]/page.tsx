@@ -7,6 +7,8 @@ import { formatPrice } from '@/lib/format';
 import type { PhoneSpecs } from '@/types/api';
 import VariantPicker from './VariantPicker';
 import styles from './page.module.css';
+import FavoriteButton from '@/components/FavoriteButton/FavoriteButton';
+import Reviews from '@/components/Reviews/Reviews';
 
 export async function generateMetadata({
   params,
@@ -68,12 +70,15 @@ export default async function ProductPage({
         <div className={styles.info}>
           <p className={styles.brand}>{product.brand.name}</p>
           <h1 className={styles.name}>{product.name}</h1>
-          {product.rating.count > 0 && (
-            <p className={styles.rating}>
-              ★ {product.rating.average.toFixed(1)} · відгуків:{' '}
-              {product.rating.count}
-            </p>
-          )}
+          <div className={styles.meta}>
+            {product.rating.count > 0 && (
+              <a href="#reviews" className={styles.rating}>
+                ★ {product.rating.average.toFixed(1)} · відгуків:{' '}
+                {product.rating.count}
+              </a>
+            )}
+            <FavoriteButton productId={product._id} />
+          </div>
 
           <VariantPicker
             product={{
@@ -130,6 +135,11 @@ export default async function ProductPage({
           </div>
         </section>
       )}
+      <Reviews
+        key={product._id}
+        productId={product._id}
+        productSlug={product.slug}
+      />
     </div>
   );
 }

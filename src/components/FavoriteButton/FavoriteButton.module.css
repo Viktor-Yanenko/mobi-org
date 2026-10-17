@@ -1,0 +1,33 @@
+.button,
+.active {
+    padding: 8px 14px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--background);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.button:hover {
+    border-color: var(--danger);
+    color: var(--danger);
+}
+
+.active {
+    border-color: var(--danger);
+    background: var(--danger);
+    color: #fff;
+}
+
+.button:disabled,
+.active:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+.error {
+    margin-top: 6px;
+    color: var(--danger);
+    font-size: 14px;
+}

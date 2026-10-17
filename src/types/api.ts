@@ -168,3 +168,27 @@ export interface AdminOrder extends Order {
   // у списку для адміна бекенд підставляє ім'я та email покупця
   user: { _id: string; name: string; email: string } | null;
 }
+
+export interface Review {
+  _id: string;
+  product: string;
+  // populate('user', 'name'); null, якщо користувача видалили
+  user: { _id: string; name: string } | null;
+  rating: number;
+  text?: string;
+  // покупець отримав цей товар у доставленому замовленні
+  isVerifiedPurchase: boolean;
+  createdAt: string;
+}
+
+// тіло POST /products/:id/reviews і PATCH /reviews/:id
+export interface ReviewData {
+  rating: number;
+  text: string;
+}
+
+// GET /favorites віддає лише ці поля товару
+export type FavoriteProduct = Pick<
+  Product,
+  '_id' | 'type' | 'name' | 'slug' | 'images' | 'minPrice' | 'rating'
+>;

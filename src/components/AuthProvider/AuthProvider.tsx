@@ -17,6 +17,7 @@ interface AuthContextValue {
   login: (email: string, password: string) => Promise<void>;
   register: (data: RegisterData) => Promise<void>;
   logout: () => Promise<void>;
+  updateUser: (changes: Partial<User>) => void;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -53,8 +54,13 @@ export default function AuthProvider({
     setUser(null);
   };
 
+  const updateUser = (changes: Partial<User>) =>
+    setUser((current) => current && { ...current, ...changes });
+
   return (
-    <AuthContext value={{ user, isLoading, login, register, logout }}>
+    <AuthContext
+      value={{ user, isLoading, login, register, logout, updateUser }}
+    >
       {children}
     </AuthContext>
   );

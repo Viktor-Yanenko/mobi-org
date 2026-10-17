@@ -17,6 +17,10 @@ const MESSAGES: Record<string, string> = {
   'Some compatible phones not found': 'Деякі сумісні телефони не знайдено',
   'Only JPG, PNG and WEBP images are allowed': 'Можна лише JPG, PNG і WEBP',
   'File too large': 'Файл більший за 5 МБ',
+    'You have already reviewed this product':
+    'Ви вже залишили відгук на цей товар',
+  'Review not found': 'Відгук не знайдено',
+  'Product not found': 'Товар не знайдено',
 };
 
 export const getErrorMessage = (error: unknown) => {

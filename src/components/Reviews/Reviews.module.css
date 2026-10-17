@@ -1,0 +1,177 @@
+.section {
+    margin-top: 48px;
+    max-width: 720px;
+}
+
+.title {
+    margin-bottom: 16px;
+    font-size: 22px;
+}
+
+.title span {
+    color: var(--muted);
+    font-weight: 400;
+}
+
+.muted {
+    margin: 12px 0;
+    color: var(--muted);
+}
+
+.link {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.error {
+    margin: 8px 0;
+    color: var(--danger);
+}
+
+/* форма */
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 24px;
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+}
+
+.textarea {
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font: inherit;
+    resize: vertical;
+}
+
+.formActions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.submit {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    background: var(--accent);
+    color: #fff;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.submit:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+/* зірки */
+
+.stars {
+    color: var(--accent-warm);
+    letter-spacing: 2px;
+}
+
+.starsEmpty {
+    color: var(--border);
+}
+
+.starInput {
+    display: flex;
+    gap: 4px;
+}
+
+.starOn,
+.starOff {
+    border: none;
+    background: none;
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.starOn {
+    color: var(--accent-warm);
+}
+
+.starOff {
+    color: var(--border);
+}
+
+.starOff:hover {
+    color: var(--accent-warm);
+}
+
+/* список */
+
+.list {
+    list-style: none;
+}
+
+.review {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+}
+
+.verified {
+    color: var(--success);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.date {
+    margin-left: auto;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.text {
+    line-height: 1.6;
+    white-space: pre-line;
+}
+
+.actions {
+    display: flex;
+    gap: 16px;
+}
+
+.linkButton,
+.deleteButton {
+    padding: 0;
+    border: none;
+    background: none;
+    color: var(--accent);
+    font: inherit;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.deleteButton {
+    color: var(--danger);
+}
+
+.more {
+    margin-top: 16px;
+    padding: 10px 20px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: none;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}

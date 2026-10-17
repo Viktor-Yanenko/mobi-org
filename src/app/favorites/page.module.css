@@ -1,0 +1,58 @@
+.message {
+    padding: 48px 0;
+    text-align: center;
+    color: var(--muted);
+}
+
+.link {
+    display: inline-block;
+    margin-top: 16px;
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.error {
+    color: var(--danger);
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+}
+
+.name {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.rating {
+    color: var(--accent-warm);
+    font-size: 14px;
+}
+
+.remove {
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: none;
+    color: var(--muted);
+    font: inherit;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.remove:hover {
+    border-color: var(--danger);
+    color: var(--danger);
+}

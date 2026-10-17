@@ -49,6 +49,10 @@ export default function ProfileView() {
         Мої замовлення →
       </Link>
 
+      <Link href="/favorites" className={styles.orders}>
+        Обране ({user.favorites.length}) →
+      </Link>
+
       {user.role === 'admin' && (
         <Link href="/admin" className={styles.orders}>
           Адмінка →
