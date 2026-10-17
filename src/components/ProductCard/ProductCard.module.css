@@ -6,11 +6,29 @@
     border: 1px solid var(--border);
     border-radius: 16px;
     background: var(--background);
-    transition: box-shadow 0.2s;
+    transition:
+        box-shadow var(--transition),
+        transform var(--transition),
+        border-color var(--transition);
 }
 
+/* картка трохи піднімається, а фото збільшується */
 .card:hover {
-    box-shadow: 0 6px 20px rgb(0 0 0 / 0.08);
+    border-color: transparent;
+    box-shadow: var(--shadow);
+    transform: translateY(-3px);
+}
+
+.card :global(img) {
+    transition: transform 0.3s ease;
+}
+
+.card:hover :global(img) {
+    transform: scale(1.04);
+}
+
+.card:hover .name {
+    color: var(--accent);
 }
 
 .brand {

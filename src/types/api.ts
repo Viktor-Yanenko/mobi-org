@@ -191,4 +191,28 @@ export interface ReviewData {
 export type FavoriteProduct = Pick<
   Product,
   '_id' | 'type' | 'name' | 'slug' | 'images' | 'minPrice' | 'rating'
->;
+  >;
+
+  // GET /orders/stats (адмінка)
+export interface OrderStats {
+  days: number;
+  orders: number;
+  revenue: number;
+  averageCheck: number;
+  byStatus: Record<OrderStatus, number>;
+  daily: { date: string; orders: number; revenue: number }[];
+  topProducts: {
+    _id: string;
+    name: string;
+    image: string | null;
+    quantity: number;
+    revenue: number;
+  }[];
+  lowStock: {
+    _id: string;
+    name: string;
+    slug: string;
+    sku: string;
+    stock: number;
+  }[];
+}

@@ -1,0 +1,15 @@
+.link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.badge {
+    min-width: 20px;
+    padding: 1px 6px;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 12px;
+    text-align: center;
+}

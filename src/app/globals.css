@@ -8,6 +8,16 @@
   --accent-warm: #d97706;
   --success: #16a34a;
   --danger: #dc2626;
+
+  /* спільні значення для анімацій і тіней */
+  --accent-soft: #eff4ff;
+  --shadow: 0 8px 24px rgb(15 23 42 / 0.08);
+  --transition: 0.2s ease;
+}
+
+html {
+  /* плавна прокрутка до якорів, наприклад до #reviews */
+  scroll-behavior: smooth;
 }
 
 * {
@@ -16,14 +26,18 @@
   margin: 0;
 }
 
+/* футер завжди внизу, навіть на короткій сторінці */
 body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   color: var(--foreground);
   background: var(--background);
   -webkit-font-smoothing: antialiased;
 }
 
 main {
-  padding-bottom: 64px;
+  flex: 1;
 }
 
 a {
@@ -44,4 +58,101 @@ a {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 16px;
+}
+
+/* ---------- плавність і фокус для всього, з чим можна взаємодіяти ---------- */
+
+a,
+button,
+input,
+select,
+textarea,
+label {
+  transition:
+    color var(--transition),
+    background-color var(--transition),
+    border-color var(--transition),
+    box-shadow var(--transition),
+    opacity var(--transition),
+    transform var(--transition);
+}
+
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+/* легке «натискання» кнопок */
+button:not(:disabled):active {
+  transform: scale(0.97);
+}
+
+/* однаковий вигляд полів: біле тло замість сірого системного у select */
+input,
+select,
+textarea {
+  background-color: var(--background);
+  color: inherit;
+}
+
+input:hover,
+select:hover,
+textarea:hover {
+  border-color: #c7cbd1;
+}
+
+/* підсвітка поля, в якому зараз курсор */
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+/* рамка для навігації клавіатурою (Tab), мишкою її не видно */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* розтягування ламало верстку: висоту задає rows */
+textarea {
+  resize: none;
+}
+
+::selection {
+  background: var(--accent-soft);
+}
+
+/* якщо в системі вимкнені анімації, не анімуємо і ми */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.skeleton {
+  border-radius: 8px;
+  background: linear-gradient(90deg,
+      var(--surface) 25%,
+      #e9ebef 50%,
+      var(--surface) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 100% 0;
+  }
+
+  to {
+    background-position: -100% 0;
+  }
 }

@@ -6,9 +6,13 @@ import { useAuth } from '@/components/AuthProvider/AuthProvider';
 import styles from './admin.module.css';
 
 const LINKS = [
+  { href: '/admin', label: 'Огляд' },
   { href: '/admin/products', label: 'Товари' },
   { href: '/admin/orders', label: 'Замовлення' },
 ];
+
+const isActive = (pathname: string, href: string) =>
+  href === '/admin' ? pathname === href : pathname.startsWith(href);
 
 // бічне меню і перевірка ролі для всіх сторінок /admin
 export default function AdminShell({
@@ -40,7 +44,7 @@ export default function AdminShell({
             key={link.href}
             href={link.href}
             className={
-              pathname.startsWith(link.href) ? styles.activeLink : styles.link
+              isActive(pathname, link.href) ? styles.activeLink : styles.link
             }
           >
             {link.label}

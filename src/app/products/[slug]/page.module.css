@@ -14,18 +14,6 @@
     gap: 40px;
 }
 
-.gallery {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.thumbs {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-}
-
 .brand {
     color: var(--muted);
 }
@@ -93,4 +81,41 @@
         grid-template-columns: 1fr;
         gap: 20px;
     }
+}
+
+/* ---------- loading.tsx ---------- */
+
+.breadcrumbsSkeleton {
+    width: 200px;
+    height: 16px;
+    margin: 20px 0;
+}
+
+.imageSkeleton {
+    aspect-ratio: 1;
+    border-radius: 12px;
+}
+
+.lineSkeleton {
+    width: 60%;
+    height: 16px;
+    margin-bottom: 16px;
+}
+
+.nameSkeleton {
+    width: 80%;
+    height: 38px;
+    margin-bottom: 24px;
+}
+
+.priceSkeleton {
+    width: 160px;
+    height: 36px;
+    margin-bottom: 24px;
+}
+
+.buttonSkeleton {
+    height: 50px;
+    margin-bottom: 32px;
+    border-radius: 12px;
 }

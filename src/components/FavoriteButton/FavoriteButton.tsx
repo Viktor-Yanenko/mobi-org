@@ -3,12 +3,14 @@
 import { useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/components/AuthProvider/AuthProvider';
+import { useToast } from '@/components/ToastProvider/ToastProvider';
 import { addFavorite, removeFavorite } from '@/lib/favorites';
 import { getErrorMessage } from '@/lib/errors';
 import styles from './FavoriteButton.module.css';
 
 export default function FavoriteButton({ productId }: { productId: string }) {
   const { user, updateUser } = useAuth();
+  const toast = useToast();
   const router = useRouter();
   const pathname = usePathname();
   const [isBusy, setIsBusy] = useState(false);
@@ -31,6 +33,10 @@ export default function FavoriteButton({ productId }: { productId: string }) {
         ? await removeFavorite(productId)
         : await addFavorite(productId);
       updateUser({ favorites: list.map((product) => product._id) });
+      toast(
+        isFavorite ? 'Прибрано з обраного' : 'Додано в обране',
+        isFavorite ? {} : { link: { href: '/favorites', label: 'Обране' } },
+      );
     } catch (err) {
       setError(getErrorMessage(err));
     } finally {

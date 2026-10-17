@@ -1,0 +1,22 @@
+.card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+}
+
+.image {
+    aspect-ratio: 1;
+    border-radius: 12px;
+}
+
+.line {
+    height: 14px;
+}
+
+.price {
+    width: 50%;
+    height: 22px;
+}

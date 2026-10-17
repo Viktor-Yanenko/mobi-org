@@ -143,7 +143,7 @@ export default function CheckoutForm() {
 
           {method === 'pickup' ? (
             <p className={styles.hint}>
-              Київ, вул. Хрещатик, 1. Щодня 10:00–20:00.
+              с. Миртюки, вул. Тараса Шевченка, 2. Щодня 10:00–20:00.
             </p>
           ) : (
             <div className={styles.row}>

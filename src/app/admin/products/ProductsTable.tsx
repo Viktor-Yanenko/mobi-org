@@ -7,6 +7,7 @@ import { getErrorMessage } from '@/lib/errors';
 import { formatPrice } from '@/lib/format';
 import type { Paginated, Product } from '@/types/api';
 import styles from '../admin.module.css';
+import { useDebouncedCallback } from 'use-debounce';
 
 export default function ProductsTable() {
   const [result, setResult] = useState<Paginated<Product> | null>(null);
@@ -22,12 +23,11 @@ export default function ProductsTable() {
       .catch((err) => setError(getErrorMessage(err)));
   }, [page, search, version]);
 
-  const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const value = new FormData(event.currentTarget).get('search');
-    setSearch(String(value ?? '').trim());
+  // список перезавантажується через 400 мс після останньої літери
+  const handleSearch = useDebouncedCallback((value: string) => {
+    setSearch(value.trim());
     setPage(1);
-  };
+  }, 400);
 
   const handleDelete = async (product: Product) => {
     if (!confirm(`Прибрати «${product.name}» з каталогу?`)) return;
@@ -43,14 +43,13 @@ export default function ProductsTable() {
     <>
       <div className={styles.toolbar}>
         <h1>Товари</h1>
-        <form onSubmit={handleSearch}>
-          <input
-            name="search"
-            type="search"
-            placeholder="Пошук за назвою"
-            className={styles.input}
-          />
-        </form>
+        <input
+          name="search"
+          type="search"
+          placeholder="Пошук за назвою"
+          className={styles.input}
+          onChange={(e) => handleSearch(e.target.value)}
+        />
         <Link href="/admin/products/new" className={styles.primary}>
           + Додати товар
         </Link>

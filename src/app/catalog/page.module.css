@@ -26,3 +26,22 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* ---------- loading.tsx ---------- */
+
+.titleSkeleton {
+    width: 220px;
+    height: 34px;
+    margin: 24px 0;
+}
+
+.filtersSkeleton {
+    height: 420px;
+    border-radius: 16px;
+}
+
+@media (max-width: 800px) {
+    .filtersSkeleton {
+        height: 56px;
+    }
+}

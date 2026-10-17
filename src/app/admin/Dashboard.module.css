@@ -1,0 +1,134 @@
+.periods {
+    display: flex;
+    gap: 8px;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.card {
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+
+.card p {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.card strong {
+    display: block;
+    margin-top: 6px;
+    font-size: 24px;
+}
+
+.note {
+    margin-top: 8px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+/* ---------- графік: стовпчики з div, без бібліотек ---------- */
+
+.chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 200px;
+    padding: 12px 12px 0;
+    border: 1px solid var(--border);
+    border-bottom: none;
+    border-radius: 12px 12px 0 0;
+}
+
+.column {
+    display: flex;
+    align-items: flex-end;
+    flex: 1;
+    height: 100%;
+}
+
+.bar {
+    width: 100%;
+    min-height: 2px;
+    /* дні без продажів теж видно */
+    border-radius: 3px 3px 0 0;
+    background: var(--accent);
+    opacity: 0.8;
+}
+
+.column:hover .bar {
+    opacity: 1;
+}
+
+.axis {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 0 0 12px 12px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+/* інакше широка таблиця розтягне колонку замість прокрутки */
+.columns>section {
+    min-width: 0;
+}
+
+.statuses {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    list-style: none;
+}
+
+.statuses li {
+    display: grid;
+    grid-template-columns: 130px 1fr 40px;
+    align-items: center;
+    gap: 12px;
+}
+
+.statuses li span:last-child {
+    text-align: right;
+    font-weight: 600;
+}
+
+.track {
+    height: 8px;
+    border-radius: 4px;
+    background: var(--surface);
+    overflow: hidden;
+}
+
+.fill {
+    height: 100%;
+    background: var(--accent);
+}
+
+.out {
+    color: var(--danger);
+    font-weight: 600;
+}
+
+@media (max-width: 900px) {
+    .cards {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .columns {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+}

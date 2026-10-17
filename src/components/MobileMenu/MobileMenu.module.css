@@ -1,0 +1,93 @@
+.wrap {
+    display: none;
+}
+
+.burger {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 40px;
+    height: 40px;
+    padding: 0 9px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--background);
+    cursor: pointer;
+}
+
+.line,
+.lineOpen {
+    height: 2px;
+    border-radius: 2px;
+    background: var(--foreground);
+    transition:
+        transform var(--transition),
+        opacity var(--transition);
+}
+
+/* верхня й нижня смужки повертаються в хрестик, середня зникає */
+.lineOpen:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.lineOpen:nth-child(2) {
+    opacity: 0;
+}
+
+.lineOpen:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+/* панель під шапкою на всю ширину; шапка sticky, тому top: 100% рахується від неї */
+.panel,
+.panelOpen {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 8px 16px 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--background);
+    box-shadow: var(--shadow);
+    transition:
+        opacity var(--transition),
+        transform var(--transition),
+        visibility var(--transition);
+}
+
+.panel {
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-8px);
+}
+
+.panelOpen {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+}
+
+.panel a,
+.panelOpen a {
+    padding: 12px 4px;
+    border-bottom: 1px solid var(--border);
+    font-weight: 600;
+}
+
+.panel a:last-child,
+.panelOpen a:last-child {
+    border-bottom: none;
+}
+
+.panelOpen a:hover {
+    color: var(--accent);
+}
+
+@media (max-width: 700px) {
+    .wrap {
+        display: block;
+    }
+}

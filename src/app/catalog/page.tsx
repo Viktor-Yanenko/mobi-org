@@ -5,6 +5,7 @@ import ProductCard from '@/components/ProductCard/ProductCard';
 import { getBrands, getCategories, getProducts } from '@/lib/catalog';
 import { isSortKey, SORT_OPTIONS } from '@/lib/sort';
 import styles from './page.module.css';
+import CatalogSearch from '@/components/CatalogSearch/CatalogSearch';
 
 export const metadata: Metadata = { title: 'Каталог' };
 
@@ -68,6 +69,7 @@ export default async function CatalogPage({
         <CatalogFilters brands={brands} categories={categories} query={query} />
 
         <section>
+          <CatalogSearch initial={query.search} />
           {result.data.length === 0 ? (
             <p className={styles.empty}>
               Нічого не знайшли. Спробуйте змінити фільтри.

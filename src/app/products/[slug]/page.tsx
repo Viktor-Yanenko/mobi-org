@@ -6,9 +6,11 @@ import { getProduct } from '@/lib/catalog';
 import { formatPrice } from '@/lib/format';
 import type { PhoneSpecs } from '@/types/api';
 import VariantPicker from './VariantPicker';
+import ProductGallery from './ProductGallery';
 import styles from './page.module.css';
 import FavoriteButton from '@/components/FavoriteButton/FavoriteButton';
 import Reviews from '@/components/Reviews/Reviews';
+import CompareButton from '@/components/CompareButton/CompareButton';
 
 export async function generateMetadata({
   params,
@@ -46,26 +48,11 @@ export default async function ProductPage({
       </p>
 
       <div className={styles.layout}>
-        <div className={styles.gallery}>
-          <ProductImage
-            src={product.images[0]}
-            alt={product.name}
-            sizes="(max-width: 800px) 100vw, 50vw"
-            priority
-          />
-          {product.images.length > 1 && (
-            <div className={styles.thumbs}>
-              {product.images.slice(1).map((src) => (
-                <ProductImage
-                  key={src}
-                  src={src}
-                  alt={product.name}
-                  sizes="120px"
-                />
-              ))}
-            </div>
-          )}
-        </div>
+        <ProductGallery
+          key={product._id}
+          images={product.images}
+          name={product.name}
+        />
 
         <div className={styles.info}>
           <p className={styles.brand}>{product.brand.name}</p>
@@ -78,6 +65,15 @@ export default async function ProductPage({
               </a>
             )}
             <FavoriteButton productId={product._id} />
+            {product.type === 'phone' && (
+              <CompareButton
+                product={{
+                  _id: product._id,
+                  slug: product.slug,
+                  name: product.name,
+                }}
+              />
+            )}
           </div>
 
           <VariantPicker

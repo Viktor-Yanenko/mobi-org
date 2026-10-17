@@ -1,5 +1,8 @@
-import { redirect } from 'next/navigation';
+import type { Metadata } from 'next';
+import Dashboard from './Dashboard';
+
+export const metadata: Metadata = { title: 'Огляд' };
 
 export default function AdminPage() {
-  redirect('/admin/products');
+  return <Dashboard />;
 }

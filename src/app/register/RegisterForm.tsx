@@ -22,13 +22,21 @@ export default function RegisterForm({ next }: { next: string }) {
     const form = new FormData(event.currentTarget);
     const phone = String(form.get('phone')).trim();
 
+    const password = String(form.get('password'));
+
+    // повтор пароля перевіряємо самі, на бекенд він не йде
+    if (password !== form.get('repeatPassword')) {
+      setError('Паролі не збігаються');
+      return;
+    }
+
     setError('');
     setIsSubmitting(true);
     try {
       await register({
         name: String(form.get('name')).trim(),
         email: String(form.get('email')).trim(),
-        password: String(form.get('password')),
+        password,
         // телефон необов'язковий: порожній рядок бекенд не пропустить
         ...(phone && { phone }),
       });
@@ -80,6 +88,16 @@ export default function RegisterForm({ next }: { next: string }) {
             required
             minLength={8}
             maxLength={64}
+            autoComplete="new-password"
+          />
+        </label>
+
+        <label className={styles.field}>
+          Повторіть пароль
+          <input
+            type="password"
+            name="repeatPassword"
+            required
             autoComplete="new-password"
           />
         </label>

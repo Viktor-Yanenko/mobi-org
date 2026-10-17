@@ -10,13 +10,13 @@ interface Props {
 
 // next/image показує лише фото з дозволених доменів (next.config.ts),
 // тому для інших посилань і для товарів без фото малюємо заглушку
-const isAllowed = (src?: string) =>
+export const isAllowedImage = (src?: string) =>
   Boolean(src?.startsWith('https://res.cloudinary.com/'));
 
 export default function ProductImage({ src, alt, sizes, priority }: Props) {
   return (
     <div className={styles.frame}>
-      {isAllowed(src) ? (
+      {isAllowedImage(src) ? (
         <Image
           src={src!}
           alt={alt}

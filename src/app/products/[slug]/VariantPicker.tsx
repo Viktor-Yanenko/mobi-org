@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import { useCart } from '@/components/CartProvider/CartProvider';
+import { useToast } from '@/components/ToastProvider/ToastProvider';
 import { getErrorMessage } from '@/lib/errors';
 import { formatPrice } from '@/lib/format';
 import type { CartItem, Variant } from '@/types/api';
@@ -16,11 +16,12 @@ interface Props {
 // вибір кольору й пам'яті: потрібен стан, тому це клієнтський компонент
 export default function VariantPicker({ product, variants }: Props) {
   const { addItem } = useCart();
+  const toast = useToast();
   // за замовчуванням перший варіант, який є в наявності
   const [sku, setSku] = useState(
     (variants.find((v) => v.stock > 0) ?? variants[0]).sku,
   );
-  const [status, setStatus] = useState<'idle' | 'adding' | 'added'>('idle');
+  const [isAdding, setIsAdding] = useState(false);
   const [error, setError] = useState('');
   const selected = variants.find((v) => v.sku === sku) ?? variants[0];
 
@@ -30,12 +31,11 @@ export default function VariantPicker({ product, variants }: Props) {
 
   const selectVariant = (newSku: string) => {
     setSku(newSku);
-    setStatus('idle');
     setError('');
   };
 
   const handleAdd = async () => {
-    setStatus('adding');
+    setIsAdding(true);
     setError('');
     try {
       await addItem({
@@ -51,10 +51,13 @@ export default function VariantPicker({ product, variants }: Props) {
         oldPrice: selected.oldPrice,
         stock: selected.stock,
       });
-      setStatus('added');
+      toast('Додано в кошик', {
+        link: { href: '/cart', label: 'Перейти в кошик' },
+      });
     } catch (err) {
       setError(getErrorMessage(err));
-      setStatus('idle');
+    } finally {
+      setIsAdding(false);
     }
   };
 
@@ -91,20 +94,14 @@ export default function VariantPicker({ product, variants }: Props) {
           : 'Немає в наявності'}
       </p>
 
-      {status === 'added' ? (
-        <Link href="/cart" className={styles.added}>
-          Додано ✓ Перейти в кошик
-        </Link>
-      ) : (
-        <button
-          type="button"
-          className={styles.buy}
-          onClick={handleAdd}
-          disabled={selected.stock === 0 || status === 'adding'}
-        >
-          {status === 'adding' ? 'Додаємо…' : 'Додати в кошик'}
-        </button>
-      )}
+      <button
+        type="button"
+        className={styles.buy}
+        onClick={handleAdd}
+        disabled={selected.stock === 0 || isAdding}
+      >
+        {isAdding ? 'Додаємо…' : 'Додати в кошик'}
+      </button>
 
       {error && <p className={styles.error}>{error}</p>}
     </div>

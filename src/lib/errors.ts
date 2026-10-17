@@ -26,6 +26,8 @@ const MESSAGES: Record<string, string> = {
     'Новий пароль має відрізнятися від поточного',
   'Address not found': 'Адресу не знайдено',
   'Maximum 5 addresses allowed': 'Можна зберегти не більше 5 адрес',
+  'Too many login attempts, try again later':
+    'Забагато невдалих спроб входу. Спробуйте за 15 хвилин',
 };
 
 export const getErrorMessage = (error: unknown) => {

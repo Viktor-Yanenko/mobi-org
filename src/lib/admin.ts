@@ -2,6 +2,7 @@ import { apiFetch } from './client-api';
 import type {
   AdminOrder,
   Category,
+  OrderStats,
   OrderStatus,
   Paginated,
   Product,
@@ -83,3 +84,10 @@ export const slugify = (text: string) =>
     .join('')
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
+
+// ---------- статистика ----------
+
+export const STATS_PERIODS = [7, 30, 90];
+
+export const getOrderStats = (days: number) =>
+  apiFetch<OrderStats>(`/orders/stats?days=${days}`);

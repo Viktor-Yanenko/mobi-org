@@ -1,0 +1,126 @@
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 24px 0;
+}
+
+.toolbar h1 {
+    font-size: 28px;
+}
+
+.toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.tableWrap {
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    min-width: 600px;
+}
+
+.table th,
+.table td {
+    padding: 12px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    vertical-align: top;
+}
+
+/* назви характеристик лишаються на місці при прокрутці вбік */
+.table tbody th {
+    position: sticky;
+    left: 0;
+    width: 180px;
+    background: var(--background);
+    color: var(--muted);
+    font-weight: 400;
+}
+
+.table thead th:first-child {
+    width: 180px;
+}
+
+.product {
+    position: relative;
+}
+
+.product a {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-weight: 600;
+}
+
+.product a:hover {
+    color: var(--accent);
+}
+
+.remove {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    z-index: 1;
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    background: var(--background);
+}
+
+.remove:hover {
+    border-color: var(--danger);
+    color: var(--danger);
+}
+
+/* найкраще значення в рядку */
+.best {
+    color: var(--success);
+    font-weight: 700;
+}
+
+.muted {
+    margin: 24px 0;
+    color: var(--muted);
+}
+
+.empty {
+    max-width: 480px;
+    margin: 64px auto;
+    text-align: center;
+}
+
+.empty p {
+    margin: 12px 0 24px;
+    color: var(--muted);
+}
+
+.button {
+    display: inline-block;
+    padding: 12px 20px;
+    border-radius: 12px;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 600;
+}
+
+@media (max-width: 700px) {
+    .table {
+        min-width: 480px;
+    }
+
+    .table tbody th,
+    .table thead th:first-child {
+        width: 110px;
+    }
+}

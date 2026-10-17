@@ -1,0 +1,131 @@
+.gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* кнопки без власного вигляду: виглядають як самі фото */
+.main,
+.thumb,
+.thumbActive {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 2px solid transparent;
+    border-radius: 14px;
+    background: none;
+    cursor: pointer;
+}
+
+.main {
+    cursor: zoom-in;
+}
+
+.thumbs {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+}
+
+.thumb {
+    opacity: 0.7;
+}
+
+.thumb:hover {
+    opacity: 1;
+}
+
+.thumbActive {
+    border-color: var(--accent);
+}
+
+/* ---------- перегляд на весь екран ---------- */
+
+.dialog {
+    width: 100vw;
+    height: 100vh;
+    max-width: none;
+    max-height: none;
+    padding: 0;
+    border: none;
+    background: transparent;
+}
+
+.dialog::backdrop {
+    background: rgb(0 0 0 / 0.85);
+}
+
+.full {
+    position: absolute;
+    inset: 48px 64px;
+    pointer-events: none;
+    /* клік «крізь» фото теж закриває перегляд */
+}
+
+.full img {
+    object-fit: contain;
+}
+
+.close,
+.arrow {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.15);
+    color: #fff;
+    cursor: pointer;
+}
+
+.close:hover,
+.arrow:hover {
+    background: rgb(255 255 255 / 0.3);
+}
+
+.close {
+    top: 12px;
+    right: 12px;
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+}
+
+.arrow {
+    top: 50%;
+    width: 48px;
+    height: 48px;
+    margin-top: -24px;
+    font-size: 32px;
+    line-height: 1;
+}
+
+.prev {
+    left: 12px;
+}
+
+.next {
+    right: 12px;
+}
+
+.counter {
+    position: absolute;
+    bottom: 16px;
+    left: 0;
+    right: 0;
+    color: #fff;
+    text-align: center;
+}
+
+@media (max-width: 700px) {
+    .full {
+        inset: 64px 8px;
+    }
+
+    .arrow {
+        top: auto;
+        bottom: 8px;
+        margin-top: 0;
+    }
+}

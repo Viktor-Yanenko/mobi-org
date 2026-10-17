@@ -19,6 +19,12 @@ export default async function HomePage() {
             Аксесуари
           </Link>
         </div>
+        <ul className={styles.features}>
+          <li>✓ Офіційна гарантія</li>
+          <li>✓ Доставка 1–2 дні</li>
+          <li>✓ Безкоштовно від 5000 ₴</li>
+          <li>✓ Оплата при отриманні</li>
+        </ul>
       </section>
 
       <section>

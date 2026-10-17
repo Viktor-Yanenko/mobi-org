@@ -3,7 +3,9 @@
     top: 0;
     z-index: 10;
     border-bottom: 1px solid var(--border);
-    background: var(--background);
+    /* напівпрозора шапка, крізь яку розмито видно сторінку */
+    background: rgb(255 255 255 / 0.85);
+    backdrop-filter: blur(12px);
 }
 
 .inner {
@@ -14,9 +16,20 @@
 }
 
 .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     font-size: 22px;
     font-weight: 800;
     color: var(--accent);
+}
+
+.logo span {
+    color: var(--foreground);
+}
+
+.logo:hover {
+    opacity: 0.8;
 }
 
 .nav {
@@ -35,25 +48,42 @@
 
 .search input {
     width: 240px;
+    background: var(--surface);
     padding: 8px 12px;
     border: 1px solid var(--border);
     border-radius: 8px;
     font: inherit;
 }
 
+/* на телефоні пошук переноситься в окремий рядок на всю ширину,
+   а розділи сайту ховаються в бургер-меню (MobileMenu) */
 @media (max-width: 700px) {
+
+    /* відступи на .header, а не на .inner: у .inner є клас container,
+     і його padding з globals.css перебив би наш */
+    .header {
+        padding: 10px 0;
+    }
+
     .inner {
-        gap: 12px;
+        flex-wrap: wrap;
+        height: auto;
+        gap: 10px 12px;
+    }
+
+    .logo {
+        margin-right: auto;
     }
 
     .nav {
         display: none;
     }
 
-    /* поле пошуку займає місце, що лишилось */
     .search {
-        flex: 1;
-        min-width: 0;
+        order: 1;
+        /* після всіх інших елементів шапки */
+        flex-basis: 100%;
+        margin-left: 0;
     }
 
     .search input {
