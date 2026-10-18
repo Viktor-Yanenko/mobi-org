@@ -1,17 +1,21 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import CompareButton from '@/components/CompareButton/CompareButton';
+import FavoriteButton from '@/components/FavoriteButton/FavoriteButton';
 import ProductImage from '@/components/ProductImage/ProductImage';
+import Reviews from '@/components/Reviews/Reviews';
 import { getProduct } from '@/lib/catalog';
 import { formatPrice } from '@/lib/format';
-import type { PhoneSpecs } from '@/types/api';
-import VariantPicker from './VariantPicker';
+import {
+  formatSpec,
+  MEMORY_ROWS,
+  memoryValues,
+  SPEC_GROUPS,
+} from '@/lib/specs';
 import ProductGallery from './ProductGallery';
+import VariantPicker from './VariantPicker';
 import styles from './page.module.css';
-import FavoriteButton from '@/components/FavoriteButton/FavoriteButton';
-import Reviews from '@/components/Reviews/Reviews';
-import CompareButton from '@/components/CompareButton/CompareButton';
-import { formatSpec, SPEC_GROUPS } from '@/lib/specs';
 
 export async function generateMetadata({
   params,
@@ -21,13 +25,6 @@ export async function generateMetadata({
   return { title: product?.name ?? 'Товар не знайдено' };
 }
 
-const SPECS: { key: keyof PhoneSpecs; label: string; unit?: string }[] = [
-  { key: 'os', label: 'Операційна система' },
-  { key: 'screenSize', label: 'Діагональ екрана', unit: '″' },
-  { key: 'ram', label: "Оперативна пам'ять", unit: ' ГБ' },
-  { key: 'battery', label: 'Акумулятор', unit: ' мА·год' },
-];
-
 export default async function ProductPage({
   params,
 }: PageProps<'/products/[slug]'>) {
@@ -36,7 +33,6 @@ export default async function ProductPage({
 
   if (!product) notFound();
 
-  // лише ті характеристики, які заповнені в товару
   // лише заповнені характеристики; група без жодної не показується
   const specGroups = SPEC_GROUPS.map((group) => ({
     ...group,
@@ -44,6 +40,15 @@ export default async function ProductPage({
       ({ key }) => product.specs?.[key] !== undefined,
     ),
   })).filter((group) => group.fields.length > 0);
+
+  // пам'ять телефону з варіантів; рядки без значень не показуємо
+  const memory =
+    product.type === 'phone'
+      ? MEMORY_ROWS.map(({ label, key }) => ({
+          label,
+          value: memoryValues(product, key),
+        })).filter((row) => row.value)
+      : [];
 
   return (
     <div className="container">
@@ -55,6 +60,7 @@ export default async function ProductPage({
       </p>
 
       <div className={styles.layout}>
+        {/* key: на сторінці іншого товару галерея починається з першого фото */}
         <ProductGallery
           key={product._id}
           images={product.images}
@@ -72,6 +78,7 @@ export default async function ProductPage({
               </a>
             )}
             <FavoriteButton productId={product._id} />
+            {/* порівнюємо лише телефони: в аксесуарів немає характеристик */}
             {product.type === 'phone' && (
               <CompareButton
                 product={{
@@ -112,9 +119,22 @@ export default async function ProductPage({
             </>
           )}
 
-          {specGroups.length > 0 && (
+          {(memory.length > 0 || specGroups.length > 0) && (
             <>
               <h2 className={styles.subtitle}>Характеристики</h2>
+              {memory.length > 0 && (
+                <section className={styles.specGroup}>
+                  <h3>Пам&apos;ять</h3>
+                  <dl className={styles.specs}>
+                    {memory.map((row) => (
+                      <div key={row.label} className={styles.specRow}>
+                        <dt>{row.label}</dt>
+                        <dd>{row.value}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </section>
+              )}
               {specGroups.map((group) => (
                 <section key={group.title} className={styles.specGroup}>
                   <h3>{group.title}</h3>
@@ -155,6 +175,8 @@ export default async function ProductPage({
           </div>
         </section>
       )}
+
+      {/* key: при переході на інший товар відгуки завантажуються з нуля */}
       <Reviews
         key={product._id}
         productId={product._id}

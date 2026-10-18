@@ -6,14 +6,8 @@ import { useCart } from '@/components/CartProvider/CartProvider';
 import ProductImage from '@/components/ProductImage/ProductImage';
 import { MAX_QUANTITY } from '@/lib/cart';
 import { getErrorMessage } from '@/lib/errors';
-import { formatPrice } from '@/lib/format';
-import type { CartItem } from '@/types/api';
+import { formatPrice, variantLabel } from '@/lib/format';
 import styles from './page.module.css';
-
-const variantLabel = (item: CartItem) =>
-  [item.color, item.storage && `${item.storage} ГБ`]
-    .filter(Boolean)
-    .join(' · ');
 
 export default function CartView() {
   const { cart, isLoading, updateQuantity, removeItem, clear } = useCart();

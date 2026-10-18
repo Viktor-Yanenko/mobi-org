@@ -1,20 +1,34 @@
 import { apiGet, ApiError } from './api';
-import type { Category, Paginated, Product, Ref } from '@/types/api';
+import type { Category, Facets, Paginated, Product, Ref } from '@/types/api';
 
-export type ProductsQuery = Record<string, string | undefined>;
+// масив — це кілька значень одного фільтра: ?ram=8&ram=12
+export type ProductsQuery = Record<string, string | string[] | undefined>;
 
-// товари завжди беремо свіжі: ціни й наявність змінюються
-export const getProducts = (query: ProductsQuery) => {
-  // порожні параметри не відправляємо
+// вибрані чекбокси у фільтрах каталогу
+export type SelectedFilters = Record<'ram' | 'storage' | 'attr', string[]>;
+
+// порожні параметри не відправляємо, масиви додаємо по одному значенню
+export const toSearchParams = (query: ProductsQuery) => {
   const params = new URLSearchParams();
   for (const [key, value] of Object.entries(query)) {
-    if (value) params.set(key, value);
+    for (const item of [value ?? []].flat()) {
+      if (item) params.append(key, item);
+    }
   }
+  return params;
+};
 
-  return apiGet<Paginated<Product>>(`/products?${params}`, {
+// товари завжди беремо свіжі: ціни й наявність змінюються
+export const getProducts = (query: ProductsQuery) =>
+  apiGet<Paginated<Product>>(`/products?${toSearchParams(query)}`, {
     cache: 'no-store',
   });
-};
+
+// які значення пам'яті й характеристик є серед знайдених товарів
+export const getFacets = (query: ProductsQuery) =>
+  apiGet<Facets>(`/products/facets?${toSearchParams(query)}`, {
+    cache: 'no-store',
+  });
 
 export const getProduct = async (slug: string) => {
   try {

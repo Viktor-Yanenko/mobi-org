@@ -24,6 +24,7 @@ export interface Variant {
   sku: string;
   color?: string;
   storage?: number;
+  ram?: number;
   price: number;
   oldPrice?: number;
   stock: number;
@@ -33,7 +34,6 @@ export interface Variant {
 export interface PhoneSpecs {
   os?: string;
   processor?: string;
-  ram?: number;
   screenSize?: number;
   screenType?: string;
   refreshRate?: number;
@@ -74,6 +74,13 @@ export interface Product {
   attributes?: AccessoryAttribute[];
   // бекенд додає їх лише для телефону на сторінці товару
   accessories?: AccessoryShort[];
+}
+
+// GET /products/facets: значення для фільтрів каталогу
+export interface Facets {
+  ram: number[];
+  storage: number[];
+  attributes: { name: string; values: string[] }[];
 }
 
 export interface Paginated<T> {
@@ -122,6 +129,7 @@ export interface CartItem {
   sku: string;
   color?: string;
   storage?: number;
+  ram?: number;
   price: number;
   oldPrice?: number;
   stock: number;

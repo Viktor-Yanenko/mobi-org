@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useCart } from '@/components/CartProvider/CartProvider';
 import { useToast } from '@/components/ToastProvider/ToastProvider';
 import { getErrorMessage } from '@/lib/errors';
-import { formatPrice } from '@/lib/format';
+import { formatPrice, variantLabel } from '@/lib/format';
 import type { CartItem, Variant } from '@/types/api';
 import styles from './VariantPicker.module.css';
 
@@ -25,9 +25,7 @@ export default function VariantPicker({ product, variants }: Props) {
   const [error, setError] = useState('');
   const selected = variants.find((v) => v.sku === sku) ?? variants[0];
 
-  const label = (v: Variant) =>
-    [v.color, v.storage && `${v.storage} ГБ`].filter(Boolean).join(' · ') ||
-    v.sku;
+  const label = (v: Variant) => variantLabel(v) || v.sku;
 
   const selectVariant = (newSku: string) => {
     setSku(newSku);
@@ -47,6 +45,7 @@ export default function VariantPicker({ product, variants }: Props) {
         sku: selected.sku,
         color: selected.color,
         storage: selected.storage,
+        ram: selected.ram,
         price: selected.price,
         oldPrice: selected.oldPrice,
         stock: selected.stock,

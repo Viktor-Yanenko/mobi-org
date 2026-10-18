@@ -9,6 +9,7 @@ import {
   slugify,
   updateProduct,
   type ProductPayload,
+  getAttributeSuggestions,
 } from '@/lib/admin';
 import { getErrorMessage } from '@/lib/errors';
 import { SPEC_FIELDS, type SpecField } from '@/lib/specs';
@@ -19,6 +20,7 @@ import type {
   Ref,
   Variant,
   AccessoryAttribute,
+  Facets,
 } from '@/types/api';
 import styles from './ProductForm.module.css';
 
@@ -42,6 +44,7 @@ interface VariantRow {
   sku: string;
   color: string;
   storage: string;
+  ram: string;
   price: string;
   oldPrice: string;
   stock: string;
@@ -56,6 +59,7 @@ const toRow = (v?: Variant): VariantRow => ({
   sku: v?.sku ?? '',
   color: v?.color ?? '',
   storage: v?.storage?.toString() ?? '',
+  ram: v?.ram?.toString() ?? '',
   price: v?.price?.toString() ?? '',
   oldPrice: v?.oldPrice?.toString() ?? '',
   stock: v?.stock?.toString() ?? '0',
@@ -69,6 +73,7 @@ const toVariant = (row: VariantRow) => ({
   stock: Number(row.stock || 0),
   ...(row.color.trim() && { color: row.color.trim() }),
   ...(row.storage && { storage: Number(row.storage) }),
+  ...(row.ram && { ram: Number(row.ram) }),
   ...(row.oldPrice && { oldPrice: Number(row.oldPrice) }),
   ...(row.images?.length && { images: row.images }),
 });
@@ -102,6 +107,13 @@ export default function ProductForm({ product, onSaved }: Props) {
   );
   const [brands, setBrands] = useState<Ref[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [categoryId, setCategoryId] = useState(
+    typeof product?.category === 'string'
+      ? product.category
+      : (product?.category?._id ?? ''),
+  );
+  // характеристики, які вже є в товарів цієї категорії (підказки в полях)
+  const [suggestions, setSuggestions] = useState<Facets['attributes']>([]);
   const [phones, setPhones] = useState<Product[]>([]);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
@@ -125,6 +137,15 @@ export default function ProductForm({ product, onSaved }: Props) {
       })
       .catch((err) => setError(getErrorMessage(err)));
   }, []);
+
+  const categorySlug = categories.find((c) => c._id === categoryId)?.slug;
+
+  useEffect(() => {
+    if (type !== 'accessory' || !categorySlug) return;
+    getAttributeSuggestions(categorySlug)
+      .then((facets) => setSuggestions(facets.attributes))
+      .catch(() => setSuggestions([])); // без підказок форма теж працює
+  }, [type, categorySlug]);
 
   const updateVariant = (
     index: number,
@@ -270,6 +291,7 @@ export default function ProductForm({ product, onSaved }: Props) {
               name="category"
               required
               defaultValue={idOf(product?.category) ?? ''}
+              onChange={(e) => setCategoryId(e.target.value)}
             >
               <option value="" disabled>
                 Виберіть категорію
@@ -302,6 +324,7 @@ export default function ProductForm({ product, onSaved }: Props) {
             <span>SKU</span>
             <span>Колір</span>
             <span>Пам&apos;ять, ГБ</span>
+            <span>RAM, ГБ</span>
             <span>Ціна, ₴</span>
             <span>Стара ціна</span>
             <span>Склад</span>
@@ -328,6 +351,13 @@ export default function ProductForm({ product, onSaved }: Props) {
                 onChange={(e) =>
                   updateVariant(index, 'storage', e.target.value)
                 }
+              />
+              <input
+                aria-label="Оперативна пам'ять"
+                type="number"
+                min={1}
+                value={row.ram}
+                onChange={(e) => updateVariant(index, 'ram', e.target.value)}
               />
               <input
                 aria-label="Ціна"
@@ -427,6 +457,12 @@ export default function ProductForm({ product, onSaved }: Props) {
             </select>
           </label>
           <p className={styles.label}>Характеристики</p>
+          {/* підказки: однакові назви й значення потрібні для фільтрів каталогу */}
+          <datalist id="attribute-names">
+            {suggestions.map((s) => (
+              <option key={s.name} value={s.name} />
+            ))}
+          </datalist>
           <div className={styles.attributes}>
             {attributes.map((row, index) => (
               <div key={row.key} className={styles.attribute}>
@@ -441,11 +477,19 @@ export default function ProductForm({ product, onSaved }: Props) {
                 <input
                   aria-label="Значення"
                   placeholder="1 м"
+                  list={`attribute-values-${row.key}`}
                   value={row.value}
                   onChange={(e) =>
                     updateAttribute(index, 'value', e.target.value)
                   }
                 />
+                <datalist id={`attribute-values-${row.key}`}>
+                  {suggestions
+                    .find((s) => s.name === row.name)
+                    ?.values.map((value) => (
+                      <option key={value} value={value} />
+                    ))}
+                </datalist>
                 <button
                   type="button"
                   aria-label="Видалити характеристику"

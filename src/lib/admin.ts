@@ -8,12 +8,18 @@ import type {
   Product,
   Ref,
   WithCount,
+  Facets,
 } from '@/types/api';
 
 // ---------- довідники ----------
 
 export const getBrands = () => apiFetch<Ref[]>('/brands');
 export const getCategories = () => apiFetch<Category[]>('/categories');
+// назви й значення характеристик, які вже є в товарів категорії
+export const getAttributeSuggestions = (categorySlug: string) =>
+  apiFetch<Facets>(
+    `/products/facets?category=${encodeURIComponent(categorySlug)}`,
+  );
 
 // ---------- керування брендами й категоріями ----------
 

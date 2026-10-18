@@ -2,7 +2,7 @@ import { useSyncExternalStore } from 'react';
 import { apiFetch } from './client-api';
 import { formatPrice } from './format';
 import type { Product } from '@/types/api';
-import { formatSpec, SPEC_FIELDS, type SpecField } from './specs';
+import { formatSpec, SPEC_FIELDS, type SpecField, MEMORY_ROWS, memoryValues } from './specs';
 
 // ---------- список порівняння в localStorage ----------
 
@@ -105,13 +105,10 @@ export const COMPARE_ROWS: CompareRow[] = [
   },
   { label: 'Бренд', value: (p) => p.brand.name },
   ...SPEC_FIELDS.map(specRow),
-  {
-    label: "Вбудована пам'ять",
-    value: (p) => {
-      const sizes = unique(p.variants.map((v) => v.storage));
-      return sizes.length ? `${sizes.join(' / ')} ГБ` : undefined;
-    },
-  },
+  ...MEMORY_ROWS.map(({ key, label }) => ({
+    label,
+    value: (p: Product) => memoryValues(p, key),
+  })),
   {
     label: 'Кольори',
     value: (p) => {

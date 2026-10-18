@@ -35,6 +35,36 @@
     width: 50%;
 }
 
+.group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    border: none;
+    font-size: 14px;
+}
+
+.group legend {
+    margin-bottom: 6px;
+    padding: 0;
+    font-weight: 600;
+}
+
+.option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.option input {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    accent-color: var(--accent);
+}
+
 .submit {
     padding: 10px;
     border: none;

@@ -1,11 +1,17 @@
 import type { Metadata } from 'next';
 import CatalogFilters from '@/components/CatalogFilters/CatalogFilters';
+import CatalogSearch from '@/components/CatalogSearch/CatalogSearch';
 import Pagination from '@/components/Pagination/Pagination';
 import ProductCard from '@/components/ProductCard/ProductCard';
-import { getBrands, getCategories, getProducts } from '@/lib/catalog';
+import {
+  getBrands,
+  getCategories,
+  getFacets,
+  getProducts,
+  type SelectedFilters,
+} from '@/lib/catalog';
 import { isSortKey, SORT_OPTIONS } from '@/lib/sort';
 import styles from './page.module.css';
-import CatalogSearch from '@/components/CatalogSearch/CatalogSearch';
 
 export const metadata: Metadata = { title: 'Каталог' };
 
@@ -18,6 +24,9 @@ const FILTER_KEYS = [
   'maxPrice',
   'sort',
 ] as const;
+
+// фільтри, у яких можна вибрати кілька значень (чекбокси)
+const MULTI_KEYS = ['ram', 'storage', 'attr'] as const;
 
 export default async function CatalogPage({
   searchParams,
@@ -34,14 +43,37 @@ export default async function CatalogPage({
   const page = typeof params.page === 'string' ? params.page : '1';
   const sort = SORT_OPTIONS[isSortKey(query.sort) ? query.sort : 'new'];
 
+  const baseQuery = {
+    type: query.type,
+    brand: query.brand,
+    category: query.category,
+    search: query.search,
+    minPrice: query.minPrice,
+    maxPrice: query.maxPrice,
+  };
+  const facets = await getFacets(baseQuery);
+
+  // лишаємо тільки ті вибрані значення, які є серед доступних. Інакше після
+  // переходу з «Кабелів» у «Чохли» фільтр «Довжина: 1 м» лишився б у адресі
+  // і нічого б не знайшлося
+  const available = {
+    ram: facets.ram.map(String),
+    storage: facets.storage.map(String),
+    attr: query.category
+      ? facets.attributes.flatMap((a) => a.values.map((v) => `${a.name}:${v}`))
+      : [],
+  };
+  const selected = {} as SelectedFilters;
+  for (const key of MULTI_KEYS) {
+    selected[key] = [params[key] ?? []]
+      .flat()
+      .filter((value) => available[key].includes(value));
+  }
+
   const [result, brands, categories] = await Promise.all([
     getProducts({
-      type: query.type,
-      brand: query.brand,
-      category: query.category,
-      search: query.search,
-      minPrice: query.minPrice,
-      maxPrice: query.maxPrice,
+      ...baseQuery,
+      ...selected,
       sortBy: sort.sortBy,
       sortOrder: sort.sortOrder,
       page,
@@ -66,10 +98,17 @@ export default async function CatalogPage({
       </h1>
 
       <div className={styles.layout}>
-        <CatalogFilters brands={brands} categories={categories} query={query} />
+        <CatalogFilters
+          brands={brands}
+          categories={categories}
+          facets={facets}
+          query={query}
+          selected={selected}
+        />
 
         <section>
           <CatalogSearch initial={query.search} />
+
           {result.data.length === 0 ? (
             <p className={styles.empty}>
               Нічого не знайшли. Спробуйте змінити фільтри.
@@ -85,7 +124,7 @@ export default async function CatalogPage({
           <Pagination
             page={result.page}
             totalPages={result.totalPages}
-            query={query}
+            query={{ ...query, ...selected }}
           />
         </section>
       </div>

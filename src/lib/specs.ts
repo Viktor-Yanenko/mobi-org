@@ -1,4 +1,4 @@
-import type { PhoneSpecs } from '@/types/api';
+import type { PhoneSpecs, Product } from '@/types/api';
 
 // усі характеристики телефону в одному місці: з цього списку будуються
 // таблиця на сторінці товару, порівняння і підписи у формі адмінки
@@ -20,13 +20,6 @@ export const SPEC_GROUPS: { title: string; fields: SpecField[] }[] = [
     fields: [
       { key: 'os', label: 'Операційна система', example: 'iOS 18' },
       { key: 'processor', label: 'Процесор', example: 'Apple A18' },
-      {
-        key: 'ram',
-        label: "Оперативна пам'ять",
-        unit: ' ГБ',
-        type: 'number',
-        best: 'max',
-      },
     ],
   },
   {
@@ -104,4 +97,20 @@ export const formatSpec = (
 ) => {
   if (typeof value === 'boolean') return value ? 'Так' : 'Ні';
   return `${value}${field.unit ?? ''}`;
+};
+
+// пам'ять задається у варіантах, тому для товару показуємо всі значення:
+// «6 / 8 ГБ», «128 / 256 ГБ»
+export const MEMORY_ROWS = [
+  { key: 'ram', label: "Оперативна пам'ять" },
+  { key: 'storage', label: "Вбудована пам'ять" },
+] as const;
+
+export const memoryValues = (product: Product, key: 'ram' | 'storage') => {
+  const values = [
+    ...new Set(product.variants.map((v) => v[key]).filter(Boolean)),
+  ] as number[];
+  return values.length
+    ? `${values.sort((a, b) => a - b).join(' / ')} ГБ`
+    : undefined;
 };

@@ -1,21 +1,19 @@
 import Link from 'next/link';
+import { toSearchParams, type ProductsQuery } from '@/lib/catalog';
 import styles from './Pagination.module.css';
 
 interface Props {
   page: number;
   totalPages: number;
   // поточні фільтри, щоб не загубити їх при переході на іншу сторінку
-  query: Record<string, string | undefined>;
+  query: ProductsQuery;
 }
 
 export default function Pagination({ page, totalPages, query }: Props) {
   if (totalPages <= 1) return null;
 
   const hrefFor = (target: number) => {
-    const params = new URLSearchParams();
-    for (const [key, value] of Object.entries(query)) {
-      if (value) params.set(key, value);
-    }
+    const params = toSearchParams(query);
     params.set('page', String(target));
     return `/catalog?${params}`;
   };
