@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { toSearchParams, type ProductsQuery } from '@/lib/catalog';
+import { toSearchParams, type ProductsQuery } from '@/lib/catalog-query';
 import styles from './Pagination.module.css';
 
 interface Props {

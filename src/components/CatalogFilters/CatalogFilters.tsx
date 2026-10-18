@@ -1,5 +1,13 @@
+'use client';
+
+import { useTransition } from 'react';
 import Link from 'next/link';
-import type { SelectedFilters } from '@/lib/catalog';
+import { useRouter } from 'next/navigation';
+import {
+  toSearchParams,
+  type ProductsQuery,
+  type SelectedFilters,
+} from '@/lib/catalog-query';
 import { SORT_OPTIONS } from '@/lib/sort';
 import type { Category, Facets, Ref } from '@/types/api';
 import styles from './CatalogFilters.module.css';
@@ -14,13 +22,19 @@ interface Props {
 
 interface OptionGroupProps {
   title: string;
-  name: string;
+  name: keyof SelectedFilters;
   options: { value: string; label: string }[];
   selected: string[];
+  onToggle: (name: keyof SelectedFilters, value: string) => void;
 }
 
-// група чекбоксів з однаковим name: форма відправить ?ram=8&ram=12
-function OptionGroup({ title, name, options, selected }: OptionGroupProps) {
+function OptionGroup({
+  title,
+  name,
+  options,
+  selected,
+  onToggle,
+}: OptionGroupProps) {
   return (
     <fieldset className={styles.group}>
       <legend>{title}</legend>
@@ -28,9 +42,8 @@ function OptionGroup({ title, name, options, selected }: OptionGroupProps) {
         <label key={option.value} className={styles.option}>
           <input
             type="checkbox"
-            name={name}
-            value={option.value}
             defaultChecked={selected.includes(option.value)}
+            onChange={() => onToggle(name, option.value)}
           />
           {option.label}
         </label>
@@ -39,7 +52,7 @@ function OptionGroup({ title, name, options, selected }: OptionGroupProps) {
   );
 }
 
-// GET-форма: кнопка «Показати» просто відкриває /catalog з новими параметрами
+// фільтри застосовуються одразу: кожна зміна відкриває /catalog з новою адресою
 export default function CatalogFilters({
   brands,
   categories,
@@ -47,20 +60,69 @@ export default function CatalogFilters({
   query,
   selected,
 }: Props) {
+  const router = useRouter();
+  // поки сервер готує нову сторінку, isPending = true
+  const [isPending, startTransition] = useTransition();
+
+  // поточні фільтри + зміни; page не передаємо, тож сторінка скидається на першу
+  const apply = (changes: ProductsQuery) => {
+    const params = toSearchParams({ ...query, ...selected, ...changes });
+    startTransition(() => {
+      router.push(`/catalog?${params}`, { scroll: false });
+    });
+  };
+
+  // інший тип товарів: категорія, пам'ять і характеристики від попереднього
+  // типу вже не підходять, тому скидаємо їх
+  const changeType = (type: string) =>
+    apply({ type, category: undefined, ram: [], storage: [], attr: [] });
+
+  // характеристики в кожної категорії свої; тип беремо з категорії
+  const changeCategory = (slug: string) => {
+    const category = categories.find((c) => c.slug === slug);
+    apply({ category: slug, type: category?.type ?? query.type, attr: [] });
+  };
+
+  const toggle = (name: keyof SelectedFilters, value: string) => {
+    const values = selected[name];
+    apply({
+      [name]: values.includes(value)
+        ? values.filter((v) => v !== value)
+        : [...values, value],
+    });
+  };
+
+  // ціну застосовуємо, коли поле втратило фокус або натиснули Enter,
+  // а не на кожну цифру
+  const changePrice = (name: 'minPrice' | 'maxPrice', value: string) => {
+    if (value !== (query[name] ?? '')) apply({ [name]: value });
+  };
+
   // якщо вибрано тип, показуємо лише його категорії
   const visibleCategories = query.type
     ? categories.filter((c) => c.type === query.type)
     : categories;
 
   return (
-    <form action="/catalog" className={styles.filters}>
-      {query.search && (
-        <input type="hidden" name="search" value={query.search} />
-      )}
-
+    <form
+      className={styles.filters}
+      aria-busy={isPending}
+      onSubmit={(e) => {
+        // Enter у полі ціни
+        e.preventDefault();
+        const form = new FormData(e.currentTarget);
+        apply({
+          minPrice: String(form.get('minPrice') ?? ''),
+          maxPrice: String(form.get('maxPrice') ?? ''),
+        });
+      }}
+    >
       <label className={styles.field}>
         Тип
-        <select name="type" defaultValue={query.type ?? ''}>
+        <select
+          defaultValue={query.type ?? ''}
+          onChange={(e) => changeType(e.target.value)}
+        >
           <option value="">Усі товари</option>
           <option value="phone">Смартфони</option>
           <option value="accessory">Аксесуари</option>
@@ -69,7 +131,10 @@ export default function CatalogFilters({
 
       <label className={styles.field}>
         Категорія
-        <select name="category" defaultValue={query.category ?? ''}>
+        <select
+          defaultValue={query.category ?? ''}
+          onChange={(e) => changeCategory(e.target.value)}
+        >
           <option value="">Усі</option>
           {visibleCategories.map((c) => (
             <option key={c._id} value={c.slug}>
@@ -81,7 +146,10 @@ export default function CatalogFilters({
 
       <label className={styles.field}>
         Бренд
-        <select name="brand" defaultValue={query.brand ?? ''}>
+        <select
+          defaultValue={query.brand ?? ''}
+          onChange={(e) => apply({ brand: e.target.value })}
+        >
           <option value="">Усі</option>
           {brands.map((b) => (
             <option key={b._id} value={b.slug}>
@@ -100,6 +168,7 @@ export default function CatalogFilters({
             min={0}
             placeholder="від"
             defaultValue={query.minPrice}
+            onBlur={(e) => changePrice('minPrice', e.target.value)}
           />
           <input
             type="number"
@@ -107,6 +176,7 @@ export default function CatalogFilters({
             min={0}
             placeholder="до"
             defaultValue={query.maxPrice}
+            onBlur={(e) => changePrice('maxPrice', e.target.value)}
           />
         </div>
       </div>
@@ -120,6 +190,7 @@ export default function CatalogFilters({
             label: `${ram} ГБ`,
           }))}
           selected={selected.ram}
+          onToggle={toggle}
         />
       )}
 
@@ -132,6 +203,7 @@ export default function CatalogFilters({
             label: `${storage} ГБ`,
           }))}
           selected={selected.storage}
+          onToggle={toggle}
         />
       )}
 
@@ -148,12 +220,16 @@ export default function CatalogFilters({
               label: value,
             }))}
             selected={selected.attr}
+            onToggle={toggle}
           />
         ))}
 
       <label className={styles.field}>
         Сортування
-        <select name="sort" defaultValue={query.sort ?? 'new'}>
+        <select
+          defaultValue={query.sort ?? 'new'}
+          onChange={(e) => apply({ sort: e.target.value })}
+        >
           {Object.entries(SORT_OPTIONS).map(([key, option]) => (
             <option key={key} value={key}>
               {option.label}
@@ -162,10 +238,16 @@ export default function CatalogFilters({
         </select>
       </label>
 
-      <button type="submit" className={styles.submit}>
-        Показати
-      </button>
-      <Link href="/catalog" className={styles.reset}>
+      {/* без кнопки форма не відправляється по Enter */}
+      <button type="submit" hidden />
+
+      {isPending && <p className={styles.pending}>Оновлюємо…</p>}
+
+      {/* тип лишаємо: «Скинути» на сторінці смартфонів лишає смартфони */}
+      <Link
+        href={query.type ? `/catalog?type=${query.type}` : '/catalog'}
+        className={styles.reset}
+      >
         Скинути фільтри
       </Link>
     </form>

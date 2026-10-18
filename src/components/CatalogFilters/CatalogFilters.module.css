@@ -65,15 +65,17 @@
     accent-color: var(--accent);
 }
 
-.submit {
-    padding: 10px;
-    border: none;
-    border-radius: 8px;
-    background: var(--accent);
-    color: #fff;
-    font: inherit;
-    font-weight: 600;
-    cursor: pointer;
+.filters[aria-busy='true'] {
+    opacity: 0.6;
+    pointer-events: none;
+    transition: opacity 0.2s;
+}
+
+.pending {
+    margin: 0;
+    font-size: 14px;
+    color: var(--muted);
+    text-align: center;
 }
 
 .reset {

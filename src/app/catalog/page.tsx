@@ -8,8 +8,8 @@ import {
   getCategories,
   getFacets,
   getProducts,
-  type SelectedFilters,
 } from '@/lib/catalog';
+import { toSearchParams, type SelectedFilters } from '@/lib/catalog-query';
 import { isSortKey, SORT_OPTIONS } from '@/lib/sort';
 import styles from './page.module.css';
 
@@ -98,7 +98,11 @@ export default async function CatalogPage({
       </h1>
 
       <div className={styles.layout}>
+        {/* key змінюється разом з адресою: тоді фільтри створюються заново
+            і показують саме те, що в адресі (наприклад, після переходу
+            з меню «Смартфони» не лишається вибраних «Кабелів») */}
         <CatalogFilters
+          key={toSearchParams({ ...query, ...selected }).toString()}
           brands={brands}
           categories={categories}
           facets={facets}

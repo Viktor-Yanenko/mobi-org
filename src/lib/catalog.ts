@@ -1,22 +1,6 @@
 import { apiGet, ApiError } from './api';
+import { toSearchParams, type ProductsQuery } from './catalog-query';
 import type { Category, Facets, Paginated, Product, Ref } from '@/types/api';
-
-// масив — це кілька значень одного фільтра: ?ram=8&ram=12
-export type ProductsQuery = Record<string, string | string[] | undefined>;
-
-// вибрані чекбокси у фільтрах каталогу
-export type SelectedFilters = Record<'ram' | 'storage' | 'attr', string[]>;
-
-// порожні параметри не відправляємо, масиви додаємо по одному значенню
-export const toSearchParams = (query: ProductsQuery) => {
-  const params = new URLSearchParams();
-  for (const [key, value] of Object.entries(query)) {
-    for (const item of [value ?? []].flat()) {
-      if (item) params.append(key, item);
-    }
-  }
-  return params;
-};
 
 // товари завжди беремо свіжі: ціни й наявність змінюються
 export const getProducts = (query: ProductsQuery) =>
