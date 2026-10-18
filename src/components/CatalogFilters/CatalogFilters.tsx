@@ -1,6 +1,6 @@
 'use client';
 
-import { useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
@@ -26,7 +26,14 @@ interface OptionGroupProps {
   options: { value: string; label: string }[];
   selected: string[];
   onToggle: (name: keyof SelectedFilters, value: string) => void;
+  // поле пошуку над чекбоксами, коли варіантів багато (моделі телефонів)
+  searchable?: boolean;
 }
+
+// текст пошуку в групах. Після кожного кліку фільтри створюються заново
+// (key у page.tsx), і звичайний useState втратив би введене. Змінна поза
+// компонентом живе, поки відкрита вкладка
+const searchTexts = new Map<string, string>();
 
 function OptionGroup({
   title,
@@ -34,11 +41,36 @@ function OptionGroup({
   options,
   selected,
   onToggle,
+  searchable,
 }: OptionGroupProps) {
+  const [search, setSearch] = useState(searchTexts.get(name) ?? '');
+  const text = search.trim().toLowerCase();
+
+  // вибрані лишаємо завжди, решту — якщо назва містить введений текст
+  const visible = options.filter(
+    (option) =>
+      selected.includes(option.value) ||
+      option.label.toLowerCase().includes(text),
+  );
+
   return (
     <fieldset className={styles.group}>
       <legend>{title}</legend>
-      {options.map((option) => (
+      {searchable && (
+        <input
+          type="search"
+          className={styles.groupSearch}
+          placeholder="Пошук моделі"
+          aria-label={`Пошук: ${title}`}
+          value={search}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            searchTexts.set(name, e.target.value);
+          }}
+        />
+      )}
+      {visible.length === 0 && <p className={styles.noOptions}>Не знайдено</p>}
+      {visible.map((option) => (
         <label key={option.value} className={styles.option}>
           <input
             type="checkbox"
@@ -74,13 +106,28 @@ export default function CatalogFilters({
 
   // інший тип товарів: категорія, пам'ять і характеристики від попереднього
   // типу вже не підходять, тому скидаємо їх
-  const changeType = (type: string) =>
-    apply({ type, category: undefined, ram: [], storage: [], attr: [] });
+  const changeType = (type: string) => {
+    searchTexts.clear();
+    apply({
+      type,
+      category: undefined,
+      ram: [],
+      storage: [],
+      attr: [],
+      compatible: [],
+    });
+  };
 
   // характеристики в кожної категорії свої; тип беремо з категорії
   const changeCategory = (slug: string) => {
     const category = categories.find((c) => c.slug === slug);
-    apply({ category: slug, type: category?.type ?? query.type, attr: [] });
+    searchTexts.clear();
+    apply({
+      category: slug,
+      type: category?.type ?? query.type,
+      attr: [],
+      compatible: [],
+    });
   };
 
   const toggle = (name: keyof SelectedFilters, value: string) => {
@@ -207,7 +254,24 @@ export default function CatalogFilters({
         />
       )}
 
-      {/* характеристики аксесуарів лише в межах однієї категорії:
+      {/* сумісність — для аксесуарів: і для всіх одразу («усе для iPhone 16»),
+          і для однієї категорії */}
+      {(query.type === 'accessory' || query.category) &&
+        facets.compatible.length > 0 && (
+          <OptionGroup
+            title="Сумісність з моделлю"
+            name="compatible"
+            options={facets.compatible.map((phone) => ({
+              value: phone.slug,
+              label: phone.name,
+            }))}
+            selected={selected.compatible}
+            onToggle={toggle}
+            searchable
+          />
+        )}
+
+      {/* характеристики — лише в межах однієї категорії:
           довжина потрібна кабелям, а не чохлам */}
       {query.category &&
         facets.attributes.map((attribute) => (

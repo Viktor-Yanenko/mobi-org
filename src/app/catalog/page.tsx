@@ -26,7 +26,7 @@ const FILTER_KEYS = [
 ] as const;
 
 // фільтри, у яких можна вибрати кілька значень (чекбокси)
-const MULTI_KEYS = ['ram', 'storage', 'attr'] as const;
+const MULTI_KEYS = ['ram', 'storage', 'attr', 'compatible'] as const;
 
 export default async function CatalogPage({
   searchParams,
@@ -62,6 +62,10 @@ export default async function CatalogPage({
     attr: query.category
       ? facets.attributes.flatMap((a) => a.values.map((v) => `${a.name}:${v}`))
       : [],
+    compatible:
+      query.type === 'accessory' || query.category
+        ? facets.compatible.map((phone) => phone.slug)
+        : [],
   };
   const selected = {} as SelectedFilters;
   for (const key of MULTI_KEYS) {

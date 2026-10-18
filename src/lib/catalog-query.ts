@@ -5,7 +5,7 @@
 export type ProductsQuery = Record<string, string | string[] | undefined>;
 
 // вибрані чекбокси у фільтрах каталогу
-export type SelectedFilters = Record<'ram' | 'storage' | 'attr', string[]>;
+export type SelectedFilters = Record<'ram' | 'storage' | 'attr' | 'compatible', string[]>;
 
 // порожні параметри не відправляємо, масиви додаємо по одному значенню
 export const toSearchParams = (query: ProductsQuery) => {
@@ -17,3 +17,4 @@ export const toSearchParams = (query: ProductsQuery) => {
   }
   return params;
 };
+

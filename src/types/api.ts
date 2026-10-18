@@ -81,6 +81,7 @@ export interface Facets {
   ram: number[];
   storage: number[];
   attributes: { name: string; values: string[] }[];
+  compatible: { slug: string; name: string }[];
 }
 
 export interface Paginated<T> {
