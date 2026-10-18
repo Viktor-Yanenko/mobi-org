@@ -72,15 +72,6 @@
     cursor: not-allowed;
 }
 
-.added {
-    padding: 14px;
-    border: 2px solid var(--success);
-    border-radius: 12px;
-    color: var(--success);
-    font-weight: 700;
-    text-align: center;
-}
-
 .error {
     color: var(--danger);
     font-size: 14px;

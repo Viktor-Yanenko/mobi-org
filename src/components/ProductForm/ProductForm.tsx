@@ -409,35 +409,37 @@ export default function ProductForm({ product, onSaved }: Props) {
       {type === 'phone' ? (
         <fieldset className={styles.section}>
           <legend>Характеристики</legend>
-          {SPEC_FIELDS.map((field) => {
-            const value = product?.specs?.[field.key];
-            const unit = field.formUnit ?? field.unit?.trim();
-            return (
-              <label key={field.key} className={styles.field}>
-                {field.label}
-                {unit && `, ${unit}`}
-                {field.type === 'boolean' ? (
-                  <select
-                    name={field.key}
-                    defaultValue={value === undefined ? '' : String(value)}
-                  >
-                    <option value="">Не вказано</option>
-                    <option value="true">Так</option>
-                    <option value="false">Ні</option>
-                  </select>
-                ) : (
-                  <input
-                    name={field.key}
-                    type={field.type === 'number' ? 'number' : 'text'}
-                    step="any"
-                    min={field.type === 'number' ? 0 : undefined}
-                    placeholder={field.example}
-                    defaultValue={value === undefined ? '' : String(value)}
-                  />
-                )}
-              </label>
-            );
-          })}
+          <div className={styles.row}>
+            {SPEC_FIELDS.map((field) => {
+              const value = product?.specs?.[field.key];
+              const unit = field.formUnit ?? field.unit?.trim();
+              return (
+                <label key={field.key} className={styles.field}>
+                  {field.label}
+                  {unit && `, ${unit}`}
+                  {field.type === 'boolean' ? (
+                    <select
+                      name={field.key}
+                      defaultValue={value === undefined ? '' : String(value)}
+                    >
+                      <option value="">Не вказано</option>
+                      <option value="true">Так</option>
+                      <option value="false">Ні</option>
+                    </select>
+                  ) : (
+                    <input
+                      name={field.key}
+                      type={field.type === 'number' ? 'number' : 'text'}
+                      step="any"
+                      min={field.type === 'number' ? 0 : undefined}
+                      placeholder={field.example}
+                      defaultValue={value === undefined ? '' : String(value)}
+                    />
+                  )}
+                </label>
+              );
+            })}
+          </div>
         </fieldset>
       ) : (
         <fieldset className={styles.section}>
@@ -469,6 +471,7 @@ export default function ProductForm({ product, onSaved }: Props) {
                 <input
                   aria-label="Назва характеристики"
                   placeholder="Наприклад, Довжина"
+                  list="attribute-names"
                   value={row.name}
                   onChange={(e) =>
                     updateAttribute(index, 'name', e.target.value)
