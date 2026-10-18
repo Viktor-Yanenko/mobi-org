@@ -11,6 +11,15 @@ export interface Category extends Ref {
   type: ProductType;
 }
 
+// GET /brands/all і /categories/all (адмінка)
+export type WithCount<T> = T & { productsCount: number };
+
+// характеристика аксесуара: { name: 'Довжина', value: '1 м' }
+export interface AccessoryAttribute {
+  name: string;
+  value: string;
+}
+
 export interface Variant {
   sku: string;
   color?: string;
@@ -23,9 +32,18 @@ export interface Variant {
 
 export interface PhoneSpecs {
   os?: string;
-  screenSize?: number;
+  processor?: string;
   ram?: number;
+  screenSize?: number;
+  screenType?: string;
+  refreshRate?: number;
+  mainCamera?: number;
+  frontCamera?: number;
   battery?: number;
+  has5g?: boolean;
+  hasNfc?: boolean;
+  weight?: number;
+  waterResistance?: string;
 }
 
 export interface AccessoryShort {
@@ -53,6 +71,7 @@ export interface Product {
   rating: { average: number; count: number };
   specs?: PhoneSpecs;
   accessoryType?: string;
+  attributes?: AccessoryAttribute[];
   // бекенд додає їх лише для телефону на сторінці товару
   accessories?: AccessoryShort[];
 }

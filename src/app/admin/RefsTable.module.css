@@ -1,0 +1,16 @@
+.addForm,
+.editForm {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.addForm {
+    margin-bottom: 20px;
+}
+
+.addForm input,
+.editForm input {
+    flex: 1;
+    min-width: 160px;
+}

@@ -9,6 +9,8 @@ const LINKS = [
   { href: '/admin', label: 'Огляд' },
   { href: '/admin/products', label: 'Товари' },
   { href: '/admin/orders', label: 'Замовлення' },
+  { href: '/admin/brands', label: 'Бренди' },
+  { href: '/admin/categories', label: 'Категорії' },
 ];
 
 const isActive = (pathname: string, href: string) =>

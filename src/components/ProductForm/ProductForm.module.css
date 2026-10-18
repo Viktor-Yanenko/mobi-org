@@ -47,7 +47,8 @@
 .field input,
 .field select,
 .field textarea,
-.variant input {
+.variant input,
+.attribute input {
     padding: 8px 10px;
     border: 1px solid var(--border);
     border-radius: 8px;
@@ -98,6 +99,18 @@
     font: inherit;
     font-weight: 600;
     cursor: pointer;
+}
+
+.attributes {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.attribute {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr 32px;
+    gap: 8px;
 }
 
 .checkboxes {

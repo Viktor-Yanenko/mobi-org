@@ -27,9 +27,10 @@ export const getProduct = async (slug: string) => {
   }
 };
 
-// бренди й категорії змінюються рідко, тому кешуємо їх на 5 хвилин
+// бренди й категорії змінюються рідко, тому кешуємо їх на хвилину:
+// новий бренд з адмінки з'явиться у фільтрах каталогу не пізніше ніж за 60 с
 export const getBrands = () =>
-  apiGet<Ref[]>('/brands', { next: { revalidate: 300 } });
+  apiGet<Ref[]>('/brands', { next: { revalidate: 60 } });
 
 export const getCategories = () =>
-  apiGet<Category[]>('/categories', { next: { revalidate: 300 } });
+  apiGet<Category[]>('/categories', { next: { revalidate: 60 } });

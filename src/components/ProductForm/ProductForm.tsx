@@ -11,7 +11,15 @@ import {
   type ProductPayload,
 } from '@/lib/admin';
 import { getErrorMessage } from '@/lib/errors';
-import type { Category, Product, ProductType, Ref, Variant } from '@/types/api';
+import { SPEC_FIELDS, type SpecField } from '@/lib/specs';
+import type {
+  Category,
+  Product,
+  ProductType,
+  Ref,
+  Variant,
+  AccessoryAttribute,
+} from '@/types/api';
 import styles from './ProductForm.module.css';
 
 const ACCESSORY_TYPES = {
@@ -21,6 +29,10 @@ const ACCESSORY_TYPES = {
   headphones: 'Навушники',
   'screen-protector': 'Захисне скло',
   powerbank: 'Павербанк',
+  smartwatch: 'Смарт-годинник',
+  speaker: 'Колонка',
+  'memory-card': 'Карта пам’яті',
+  holder: 'Тримач',
   other: 'Інше',
 };
 
@@ -61,6 +73,19 @@ const toVariant = (row: VariantRow) => ({
   ...(row.images?.length && { images: row.images }),
 });
 
+// характеристика аксесуара в формі; key — як у варіантів
+interface AttributeRow {
+  key: string;
+  name: string;
+  value: string;
+}
+
+const toAttributeRow = (a?: AccessoryAttribute): AttributeRow => ({
+  key: String(nextKey++),
+  name: a?.name ?? '',
+  value: a?.value ?? '',
+});
+
 interface Props {
   // немає product: створення нового товару
   product?: Product;
@@ -71,6 +96,9 @@ export default function ProductForm({ product, onSaved }: Props) {
   const [type, setType] = useState<ProductType>(product?.type ?? 'phone');
   const [variants, setVariants] = useState<VariantRow[]>(
     product ? product.variants.map(toRow) : [toRow()],
+  );
+  const [attributes, setAttributes] = useState<AttributeRow[]>(
+    product?.attributes?.map(toAttributeRow) ?? [],
   );
   const [brands, setBrands] = useState<Ref[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -107,12 +135,29 @@ export default function ProductForm({ product, onSaved }: Props) {
       rows.map((row, i) => (i === index ? { ...row, [field]: value } : row)),
     );
 
+  const updateAttribute = (
+    index: number,
+    field: 'name' | 'value',
+    value: string,
+  ) =>
+    setAttributes((rows) =>
+      rows.map((row, i) => (i === index ? { ...row, [field]: value } : row)),
+    );
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
     const text = (name: string) => String(form.get(name) ?? '').trim();
     const number = (name: string) =>
       text(name) ? Number(text(name)) : undefined;
+
+    const specValue = ({ key, type }: SpecField) => {
+      if (type === 'number') return number(key);
+      // '' означає «не вказано»: таке поле не відправляємо
+      if (type === 'boolean')
+        return text(key) ? text(key) === 'true' : undefined;
+      return text(key) || undefined;
+    };
 
     const payload: ProductPayload = {
       name: text('name'),
@@ -124,16 +169,19 @@ export default function ProductForm({ product, onSaved }: Props) {
       ...(type === 'phone'
         ? {
             // JSON.stringify сам викине undefined
-            specs: {
-              os: text('os') || undefined,
-              screenSize: number('screenSize'),
-              ram: number('ram'),
-              battery: number('battery'),
-            },
+            specs: Object.fromEntries(
+              SPEC_FIELDS.map((field) => [field.key, specValue(field)]),
+            ),
           }
         : {
             accessoryType: text('accessoryType'),
             compatibleWith: form.getAll('compatibleWith').map(String),
+            attributes: attributes
+              .map((row) => ({
+                name: row.name.trim(),
+                value: row.value.trim(),
+              }))
+              .filter((row) => row.name && row.value),
           }),
     };
 
@@ -331,41 +379,35 @@ export default function ProductForm({ product, onSaved }: Props) {
       {type === 'phone' ? (
         <fieldset className={styles.section}>
           <legend>Характеристики</legend>
-          <div className={styles.row}>
-            <label className={styles.field}>
-              Операційна система
-              <input name="os" defaultValue={product?.specs?.os} />
-            </label>
-            <label className={styles.field}>
-              Діагональ, дюймів
-              <input
-                name="screenSize"
-                type="number"
-                step="0.01"
-                min={1}
-                max={20}
-                defaultValue={product?.specs?.screenSize}
-              />
-            </label>
-            <label className={styles.field}>
-              Оперативна пам&apos;ять, ГБ
-              <input
-                name="ram"
-                type="number"
-                min={1}
-                defaultValue={product?.specs?.ram}
-              />
-            </label>
-            <label className={styles.field}>
-              Акумулятор, мА·год
-              <input
-                name="battery"
-                type="number"
-                min={100}
-                defaultValue={product?.specs?.battery}
-              />
-            </label>
-          </div>
+          {SPEC_FIELDS.map((field) => {
+            const value = product?.specs?.[field.key];
+            const unit = field.formUnit ?? field.unit?.trim();
+            return (
+              <label key={field.key} className={styles.field}>
+                {field.label}
+                {unit && `, ${unit}`}
+                {field.type === 'boolean' ? (
+                  <select
+                    name={field.key}
+                    defaultValue={value === undefined ? '' : String(value)}
+                  >
+                    <option value="">Не вказано</option>
+                    <option value="true">Так</option>
+                    <option value="false">Ні</option>
+                  </select>
+                ) : (
+                  <input
+                    name={field.key}
+                    type={field.type === 'number' ? 'number' : 'text'}
+                    step="any"
+                    min={field.type === 'number' ? 0 : undefined}
+                    placeholder={field.example}
+                    defaultValue={value === undefined ? '' : String(value)}
+                  />
+                )}
+              </label>
+            );
+          })}
         </fieldset>
       ) : (
         <fieldset className={styles.section}>
@@ -384,6 +426,46 @@ export default function ProductForm({ product, onSaved }: Props) {
               ))}
             </select>
           </label>
+          <p className={styles.label}>Характеристики</p>
+          <div className={styles.attributes}>
+            {attributes.map((row, index) => (
+              <div key={row.key} className={styles.attribute}>
+                <input
+                  aria-label="Назва характеристики"
+                  placeholder="Наприклад, Довжина"
+                  value={row.name}
+                  onChange={(e) =>
+                    updateAttribute(index, 'name', e.target.value)
+                  }
+                />
+                <input
+                  aria-label="Значення"
+                  placeholder="1 м"
+                  value={row.value}
+                  onChange={(e) =>
+                    updateAttribute(index, 'value', e.target.value)
+                  }
+                />
+                <button
+                  type="button"
+                  aria-label="Видалити характеристику"
+                  className={styles.removeVariant}
+                  onClick={() =>
+                    setAttributes((rows) => rows.filter((_, i) => i !== index))
+                  }
+                >
+                  ✕
+                </button>
+              </div>
+            ))}
+          </div>
+          <button
+            type="button"
+            className={styles.addVariant}
+            onClick={() => setAttributes((rows) => [...rows, toAttributeRow()])}
+          >
+            + Додати характеристику
+          </button>
           <p className={styles.label}>Сумісні телефони</p>
           <div className={styles.checkboxes}>
             {phones.map((phone) => (

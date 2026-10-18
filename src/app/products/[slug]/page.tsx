@@ -11,6 +11,7 @@ import styles from './page.module.css';
 import FavoriteButton from '@/components/FavoriteButton/FavoriteButton';
 import Reviews from '@/components/Reviews/Reviews';
 import CompareButton from '@/components/CompareButton/CompareButton';
+import { formatSpec, SPEC_GROUPS } from '@/lib/specs';
 
 export async function generateMetadata({
   params,
@@ -36,7 +37,13 @@ export default async function ProductPage({
   if (!product) notFound();
 
   // лише ті характеристики, які заповнені в товару
-  const specs = SPECS.filter(({ key }) => product.specs?.[key] !== undefined);
+  // лише заповнені характеристики; група без жодної не показується
+  const specGroups = SPEC_GROUPS.map((group) => ({
+    ...group,
+    fields: group.fields.filter(
+      ({ key }) => product.specs?.[key] !== undefined,
+    ),
+  })).filter((group) => group.fields.length > 0);
 
   return (
     <div className="container">
@@ -90,20 +97,37 @@ export default async function ProductPage({
             <p className={styles.description}>{product.description}</p>
           )}
 
-          {specs.length > 0 && (
+          {/* в аксесуарів довільні характеристики: назва — значення */}
+          {product.attributes && product.attributes.length > 0 && (
             <>
               <h2 className={styles.subtitle}>Характеристики</h2>
               <dl className={styles.specs}>
-                {specs.map(({ key, label, unit }) => (
-                  <div key={key} className={styles.specRow}>
-                    <dt>{label}</dt>
-                    <dd>
-                      {product.specs?.[key]}
-                      {unit}
-                    </dd>
+                {product.attributes.map((attribute, index) => (
+                  <div key={index} className={styles.specRow}>
+                    <dt>{attribute.name}</dt>
+                    <dd>{attribute.value}</dd>
                   </div>
                 ))}
               </dl>
+            </>
+          )}
+
+          {specGroups.length > 0 && (
+            <>
+              <h2 className={styles.subtitle}>Характеристики</h2>
+              {specGroups.map((group) => (
+                <section key={group.title} className={styles.specGroup}>
+                  <h3>{group.title}</h3>
+                  <dl className={styles.specs}>
+                    {group.fields.map((field) => (
+                      <div key={field.key} className={styles.specRow}>
+                        <dt>{field.label}</dt>
+                        <dd>{formatSpec(field, product.specs?.[field.key])}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </section>
+              ))}
             </>
           )}
         </div>

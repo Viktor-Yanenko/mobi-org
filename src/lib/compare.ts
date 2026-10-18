@@ -2,6 +2,7 @@ import { useSyncExternalStore } from 'react';
 import { apiFetch } from './client-api';
 import { formatPrice } from './format';
 import type { Product } from '@/types/api';
+import { formatSpec, SPEC_FIELDS, type SpecField } from './specs';
 
 // ---------- список порівняння в localStorage ----------
 
@@ -77,6 +78,18 @@ const unique = <T>(values: (T | undefined)[]) => [
   ...new Set(values.filter((value) => value !== undefined)),
 ];
 
+// рядок порівняння з характеристики телефону
+const specRow = (field: SpecField): CompareRow => ({
+  label: field.label,
+  value: (p) => {
+    const value = p.specs?.[field.key];
+    // «Так» / «Ні» порівнюємо як текст, числа — як числа
+    return typeof value === 'boolean' ? formatSpec(field, value) : value;
+  },
+  best: field.best,
+  format: (value) => formatSpec(field, value),
+});
+
 export const COMPARE_ROWS: CompareRow[] = [
   {
     label: 'Ціна від',
@@ -91,24 +104,7 @@ export const COMPARE_ROWS: CompareRow[] = [
     format: (value) => `★ ${value.toFixed(1)}`,
   },
   { label: 'Бренд', value: (p) => p.brand.name },
-  { label: 'Операційна система', value: (p) => p.specs?.os },
-  {
-    label: 'Діагональ екрана',
-    value: (p) => p.specs?.screenSize,
-    format: (value) => `${value}″`,
-  },
-  {
-    label: "Оперативна пам'ять",
-    value: (p) => p.specs?.ram,
-    best: 'max',
-    format: (value) => `${value} ГБ`,
-  },
-  {
-    label: 'Акумулятор',
-    value: (p) => p.specs?.battery,
-    best: 'max',
-    format: (value) => `${value} мА·год`,
-  },
+  ...SPEC_FIELDS.map(specRow),
   {
     label: "Вбудована пам'ять",
     value: (p) => {

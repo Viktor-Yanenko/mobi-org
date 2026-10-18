@@ -7,12 +7,50 @@ import type {
   Paginated,
   Product,
   Ref,
+  WithCount,
 } from '@/types/api';
 
 // ---------- довідники ----------
 
 export const getBrands = () => apiFetch<Ref[]>('/brands');
 export const getCategories = () => apiFetch<Category[]>('/categories');
+
+// ---------- керування брендами й категоріями ----------
+
+export type RefPayload = { name?: string; slug?: string; type?: string };
+
+export const getBrandsWithCounts = () =>
+  apiFetch<WithCount<Ref>[]>('/brands/all');
+
+export const createBrand = (payload: RefPayload) =>
+  apiFetch<Ref>('/brands', { method: 'POST', body: JSON.stringify(payload) });
+
+export const updateBrand = (id: string, payload: RefPayload) =>
+  apiFetch<Ref>(`/brands/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+  });
+
+export const deleteBrand = (id: string) =>
+  apiFetch<null>(`/brands/${id}`, { method: 'DELETE' });
+
+export const getCategoriesWithCounts = () =>
+  apiFetch<WithCount<Category>[]>('/categories/all');
+
+export const createCategory = (payload: RefPayload) =>
+  apiFetch<Category>('/categories', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+
+export const updateCategory = (id: string, payload: RefPayload) =>
+  apiFetch<Category>(`/categories/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+  });
+
+export const deleteCategory = (id: string) =>
+  apiFetch<null>(`/categories/${id}`, { method: 'DELETE' });
 
 // ---------- товари ----------
 

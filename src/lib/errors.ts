@@ -28,6 +28,12 @@ const MESSAGES: Record<string, string> = {
   'Maximum 5 addresses allowed': 'Можна зберегти не більше 5 адрес',
   'Too many login attempts, try again later':
     'Забагато невдалих спроб входу. Спробуйте за 15 хвилин',
+  'waterResistance: format like IP68': 'Захист від води: формат IP68',
+  'Brand with this name or slug already exists':
+    'Бренд з такою назвою або slug вже існує',
+  'Category with this slug already exists': 'Категорія з таким slug вже існує',
+  'Brand has products': 'У бренду є товари, тому видалити його не можна',
+  'Category has products': 'У категорії є товари, тому видалити її не можна',
 };
 
 export const getErrorMessage = (error: unknown) => {
